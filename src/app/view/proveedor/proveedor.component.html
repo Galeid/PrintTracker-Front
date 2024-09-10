@@ -1,0 +1,62 @@
+<button (click)="router.navigate(['/dashboard'])">Regresar</button>
+<button (click)="showDialog()">Crear</button>
+<p-dialog header="Crear Proveedor" [(visible)]="displayDialog" [responsive]="true" [style]="{ width: '25rem' }">
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="nombre">Nombre*</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="nombre"
+        name="nombre"
+        [(ngModel)]="proveedor.nombre" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="nombre">RUC</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="ruc"
+        name="ruc"
+        [(ngModel)]="proveedor.ruc" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="empresa">Empresa</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="empresa"
+        name="empresa"
+        [(ngModel)]="proveedor.empresa" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="telefono">Rubro</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="telefono"
+        name="telefono"
+        [(ngModel)]="proveedor.rubro" />
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <p-button label="Cancel" severity="secondary" (onClick)="displayDialog = false" />
+    <p-button label="Save" (onClick)="addProveedor()" />
+</div>
+</p-dialog>
+<p-table [value]="proveedores" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Nombre</th>
+          <th>Ruc</th>
+          <th>Empresa</th>
+          <th>Rubro</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-proveedor>
+      <tr>
+          <td>{{ proveedor.nombre }}</td>
+          <td>{{ proveedor.ruc }}</td>
+          <td>{{ proveedor.empresa }}</td>
+          <td>{{ proveedor.rubro }}</td>
+      </tr>
+  </ng-template>
+</p-table>

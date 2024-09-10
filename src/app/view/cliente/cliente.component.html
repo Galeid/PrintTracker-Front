@@ -1,0 +1,84 @@
+<button (click)="router.navigate(['/dashboard'])">Regresar</button>
+<button (click)="showDialog()">Crear</button>
+<p-dialog header="Crear Cliente" [(visible)]="displayDialog" [responsive]="true" [style]="{ width: '25rem' }">
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="nombre">Nombre*</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="nombre"
+        name="nombre"
+        [(ngModel)]="cliente.nombre" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="nombre">RUC*</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="ruc"
+        name="ruc"
+        [(ngModel)]="cliente.ruc" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="empresa">Empresa*</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="empresa"
+        name="empresa"
+        [(ngModel)]="cliente.empresa" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="telefono">Telefono*</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="telefono"
+        name="telefono"
+        [(ngModel)]="cliente.telefono" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="correo">Correo</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="correo"
+        name="correo"
+        [(ngModel)]="cliente.correo" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between">
+    <label for="direccion">Dirreccion</label>
+    <input
+      class="bg-slate-200"
+        pInputText
+        id="direccion"
+        name="direccion"
+        [(ngModel)]="cliente.direccion" />
+  </div>
+  <div class="flex justify-content-end gap-2">
+    <p-button label="Cancel" severity="secondary" (onClick)="displayDialog = false" />
+    <p-button label="Save" (onClick)="addCliente()" />
+</div>
+</p-dialog>
+<p-table [value]="clientes" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+      <tr>
+          <th>Nombre</th>
+          <th>Ruc</th>
+          <th>Empresa</th>
+          <th>Telefono</th>
+          <th>Correo</th>
+          <th>Direccion</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-cliente>
+      <tr>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.ruc }}</td>
+          <td>{{ cliente.empresa }}</td>
+          <td>{{ cliente.telefono }}</td>
+          <td>{{ cliente.correo }}</td>
+          <td>{{ cliente.direccion }}</td>
+      </tr>
+  </ng-template>
+</p-table>
