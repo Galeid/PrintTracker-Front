@@ -10,11 +10,11 @@ export class CajaService {
   headers = {
     headers: { Accept: 'application/json' },
   }
-cajaId='8186798b-a60f-46a3-9caa-31703750b83a'
+  cajaId='4befa8fe-da33-4f4d-b60f-d29e6e255a0e'
   constructor(private http: HttpClient) {}
 
   getCaja(): Observable<any> {
-    return this.http.get(this.url + '/caja/' + this.cajaId,this.headers);
+    return this.http.get(this.url + '/cajas/' + this.cajaId,this.headers);
   }
 
   cerrarCaja(registrodto:any): Observable<any> {

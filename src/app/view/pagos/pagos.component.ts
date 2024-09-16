@@ -37,10 +37,11 @@ export class PagosComponent implements OnInit {
     descripcion: '',
     monto: 0,
     nroFactura: null,
-    pago: 'efectivo',
+    tipoPago: 'efectivo',
     fecha: new Date(),
     idUsuario: '',
     idProveedor: '',
+    idCaja: '',
   };
   tipoPago = [
     { value: 'efectivo', label: 'Efectivo' },
@@ -99,10 +100,11 @@ export class PagosComponent implements OnInit {
           descripcion: '',
           monto: 0,
           nroFactura: null,
-          pago: 'efectivo',
+          tipoPago: 'efectivo',
           fecha: new Date(),
           idUsuario: '',
           idProveedor: '',
+          idCaja: '',
         };
         this.proveedorSelected = undefined
         this.getGastos();

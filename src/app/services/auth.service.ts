@@ -11,10 +11,10 @@ export class AuthService {
   constructor(private http: HttpClient) {}
   login(username: string, password: string): Observable<any> {
     return this.http.post(
-      this.url + '/usuarios/login',
+      this.url + '/auth/login',
       {
-        usuario: username,
-        contrasena: password,
+        username,
+        password,
       },
       {
         headers: { Accept: 'application/json' },

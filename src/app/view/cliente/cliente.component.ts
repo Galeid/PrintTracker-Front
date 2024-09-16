@@ -60,8 +60,8 @@ export class ClienteComponent implements OnInit {
           nombre:'',
           ruc:'',
           empresa:'',
-          direccion:'',
           telefono:'',
+          direccion:'',
           correo:''
         }
         this.getClientes()

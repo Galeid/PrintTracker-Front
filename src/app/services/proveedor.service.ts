@@ -14,11 +14,11 @@ export class ProveedorService {
   constructor(private http: HttpClient) {}
 
   getProveedores(): Observable<any> {
-    return this.http.get(this.url + '/proveedor',this.headers);
+    return this.http.get(this.url + '/proveedores',this.headers);
   }
 
   addProveedor(proveedor: any): Observable<any> {
-    return this.http.post(this.url + '/proveedor', proveedor, this.headers);
+    return this.http.post(this.url + '/proveedores', proveedor, this.headers);
   }
 
 }

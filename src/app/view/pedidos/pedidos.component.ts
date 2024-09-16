@@ -52,6 +52,7 @@ export class PedidosComponent implements OnInit {
     fecha: new Date(),
     idUsuario: '',
     idCliente: '',
+    idCaja:'',
   };
   clientes = []
   clienteSelected:any
@@ -96,6 +97,7 @@ export class PedidosComponent implements OnInit {
           fecha: new Date(),
           idUsuario: '',
           idCliente: '',
+          idCaja:'',
         };
         this.clienteSelected = undefined
         this.getPedidos();
