@@ -1,0 +1,47 @@
+<button (click)="router.navigate(['/dashboard'])">Regresar</button>
+
+<p-table [value]="registros" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+      <tr>
+        <th>Fecha</th>
+        <th>CuentaInicial</th>
+        <th>EfectivoInicial</th>
+        <th>PendienteInicial</th>
+        <th>CuentaFinal</th>
+        <th>EfectivoFinal</th>
+        <th>PendienteFinal</th>
+        <th>IngresosCuenta</th>
+        <th>GastosCuenta</th>
+        <th>IngresosEfectivo</th>
+        <th>GastosEfectivo</th>
+        <th>PendienteHoy</th>
+        <th>nroPedidos</th>
+        <th>nroGastos</th>
+        <th>nroPedidosPendientes</th>
+        <th>nroPasadosPagados</th>
+
+
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-registro>
+      <tr>
+          <td>{{ registro.fecha }}</td>
+          <td>{{ registro.cuentaInicial }}</td>
+          <td>{{ registro.efectivoInicial }}</td>
+          <td>{{ registro.pendienteInicial }}</td>
+          <td>{{ registro.cuentaFinal }}</td>
+          <td>{{ registro.efectivoFinal }}</td>
+          <td>{{ registro.pendienteFinal }}</td>
+
+          <td>{{ registro.ingresosCuentaTotal }}</td>
+          <td>{{ registro.gastosCuentaTotal }}</td>
+          <td>{{ registro.ingresosEfectivoTotal }}</td>
+          <td>{{ registro.gastosEfectivoTotal }}</td>
+          <td>{{ registro.pendientesHoy }}</td>
+          <td>{{ registro.nroPedidos }}</td>
+          <td>{{ registro.nroGastos }}</td>
+          <td>{{ registro.nroPedidosPendientes }}</td>
+          <td>{{ registro.nroPasadosPagados }}</td>
+      </tr>
+  </ng-template>
+</p-table>

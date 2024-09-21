@@ -7,6 +7,7 @@ import { PedidosComponent } from './view/pedidos/pedidos.component';
 import { PagosComponent } from './view/pagos/pagos.component';
 import { inject } from '@angular/core';
 import { MainLayoutComponent } from './layouts/main/main.component';
+import { RegistrosComponent } from './view/registros/registros.component';
 
 export const routes: Routes = [
   {
@@ -42,6 +43,11 @@ export const routes: Routes = [
         component: PagosComponent,
         canActivate: [redirectLogin],
       },
+      {
+        path: 'registros',
+        component: RegistrosComponent,
+        canActivate: [redirectLogin],
+      }
     ],
   },
 ];
