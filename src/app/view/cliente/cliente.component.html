@@ -1,6 +1,6 @@
 <button (click)="router.navigate(['/dashboard'])">Regresar</button>
 <button (click)="showDialog()">Crear</button>
-<p-dialog header="Crear Cliente" [(visible)]="displayDialog" [responsive]="true" [style]="{ width: '25rem' }">
+<p-dialog header="Crear Cliente" [(visible)]="displayDialog" [modal]="true" [style]="{ width: '25rem' }">
   <div class="flex flex-column gap-2 mt-2 justify-between">
     <label for="nombre">Nombre*</label>
     <input

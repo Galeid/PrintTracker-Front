@@ -1,22 +1,6 @@
-<ul>
-  <li>
-    <button (click)="router.navigate(['/clientes'])">Clientes</button>
-  </li>
-  <li>
-    <button (click)="router.navigate(['/proveedores'])">Proveedores</button>
-  </li>
-  <li>
-    <button (click)="router.navigate(['/pedidos'])">Pedidos</button>
-  </li>
-  <li>
-    <button (click)="router.navigate(['/pagos'])">Pagos</button>
-  </li>
-</ul>
+
 <div class="border-t-4 text-right">
   <button (click)="showDialog()">Cerrar Caja PELIGROOOOO</button>
-</div>
-<div class="border-t-4 text-right">
-  <button (click)="logout()">Cerrar Sesion</button>
 </div>
 <div class="border-t-4">
   Cuenta: {{caja?.cuenta}}
@@ -27,7 +11,7 @@
 <div>
   Pendiente: {{caja?.pendiente}}
 </div>
-<p-dialog header="Cerrar Caja" [(visible)]="displayDialog" [style]="{ width: '50rem', height: '100%' }">
+<p-dialog header="Cerrar Caja" [(visible)]="displayDialog" [modal]="true" [style]="{ width: '50rem', height: '100%' }">
   <div class="flex flex-column gap-2 mt-2">
     <label>Fecha*</label>
     <p-calendar

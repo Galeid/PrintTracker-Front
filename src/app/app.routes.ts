@@ -6,6 +6,7 @@ import { ProveedorComponent } from './view/proveedor/proveedor.component';
 import { PedidosComponent } from './view/pedidos/pedidos.component';
 import { PagosComponent } from './view/pagos/pagos.component';
 import { inject } from '@angular/core';
+import { MainLayoutComponent } from './layouts/main/main.component';
 
 export const routes: Routes = [
   {
@@ -13,29 +14,35 @@ export const routes: Routes = [
     component: LoginComponent,
   },
   {
-    path: 'clientes',
-    component: ClienteComponent,
-    canActivate: [redirectLogin],
-  },
-  {
-    path: 'proveedores',
-    component: ProveedorComponent,
-    canActivate: [redirectLogin],
-  },
-  {
-    path: 'pedidos',
-    component: PedidosComponent,
-    canActivate: [redirectLogin],
-  },
-  {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [redirectLogin],
-  },
-  {
-    path: 'pagos',
-    component: PagosComponent,
-    canActivate: [redirectLogin],
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      {
+        path: 'clientes',
+        component: ClienteComponent,
+        canActivate: [redirectLogin],
+      },
+      {
+        path: 'proveedores',
+        component: ProveedorComponent,
+        canActivate: [redirectLogin],
+      },
+      {
+        path: 'pedidos',
+        component: PedidosComponent,
+        canActivate: [redirectLogin],
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
+        canActivate: [redirectLogin],
+      },
+      {
+        path: 'pagos',
+        component: PagosComponent,
+        canActivate: [redirectLogin],
+      },
+    ],
   },
 ];
 

@@ -47,10 +47,4 @@ export class DashboardComponent implements OnInit {
   showDialog() {
     this.displayDialog = true;
   }
-
-  logout(){
-    localStorage.removeItem('idCaja');
-    localStorage.removeItem('idUsuario');
-    this.router.navigate(['/']);
-  }
 }
