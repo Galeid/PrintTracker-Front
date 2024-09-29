@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
   styleUrl: './cliente.component.css',
 })
 export class ClienteComponent implements OnInit {
+  search: string = ''
   clientes = [];
   displayDialog = false;
   cliente:any = {
