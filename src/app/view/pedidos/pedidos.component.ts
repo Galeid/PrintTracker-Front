@@ -12,6 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
 import { ClienteService } from '../../services/cliente.service';
+import { ClienteEntity } from '../../entities/cliente/cliente.entity';
 @Component({
   selector: 'app-pedidos',
   standalone: true,
@@ -54,7 +55,7 @@ export class PedidosComponent implements OnInit {
     idCliente: '',
     idCaja:'',
   };
-  clientes = []
+  clientes: ClienteEntity[] = []
   clienteSelected:any
 
   constructor(private pedidoService: PedidoService, public router: Router, private clienteService: ClienteService) {}
@@ -65,7 +66,7 @@ export class PedidosComponent implements OnInit {
   }
 
   getClientes() {
-    this.clienteService.getClientes().subscribe({
+    this.clienteService.get().subscribe({
       next: (clientes) => (this.clientes = clientes),
       error: (error) => console.error('Error:', error),
     });

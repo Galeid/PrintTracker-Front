@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 import { GastoService } from '../../services/gasto.service';
 import { Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor.service';
+import { ProveedorEntity } from '../../entities/proveedor/proveedor.entity';
 
 @Component({
   selector: 'app-pagos',
@@ -31,7 +32,7 @@ import { ProveedorService } from '../../services/proveedor.service';
 })
 export class PagosComponent implements OnInit {
   displayDialog=false;
-  proveedores=[]
+  proveedores:ProveedorEntity[]=[]
   gastos: any[] = [];
   gasto: any = {
     descripcion: '',
@@ -59,7 +60,7 @@ export class PagosComponent implements OnInit {
   }
 
   getProveedores() {
-    this.proveedorService.getProveedores().subscribe({
+    this.proveedorService.get().subscribe({
       next: (proveedores) => (this.proveedores = proveedores),
       error: (error) => console.error('Error:', error),
     });

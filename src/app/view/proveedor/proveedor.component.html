@@ -1,62 +1,122 @@
-<button (click)="router.navigate(['/dashboard'])">Regresar</button>
-<button (click)="showDialog()">Crear</button>
-<p-dialog header="Crear Proveedor" [(visible)]="displayDialog" [modal]="true" [style]="{ width: '25rem' }">
-  <div class="flex flex-column gap-2 mt-2 justify-between">
-    <label for="nombre">Nombre*</label>
-    <input
-      class="bg-slate-200"
-        pInputText
-        id="nombre"
-        name="nombre"
-        [(ngModel)]="proveedor.nombre" />
+<div class="flex justify-between mb-4">
+  <div class="flex gap-4 items-center">
+    <p-button
+      label="Regresar"
+      icon="pi pi-angle-double-left text-xl"
+      iconPos="left"
+      severity="secondary"
+      (onClick)="router.navigate(['/dashboard'])"
+    />
+    <div class="text-2xl font-semibold">Proveedores</div>
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
-    <label for="nombre">RUC</label>
-    <input
-      class="bg-slate-200"
-        pInputText
-        id="ruc"
-        name="ruc"
-        [(ngModel)]="proveedor.ruc" />
+
+  <div class="flex gap-4 items-center">
+    <div class="flex gap-4 items-center">
+      <label class="font-semibold">Buscar por:</label>
+      <p-iconField iconPosition="right">
+        <p-inputIcon styleClass="pi pi-search" />
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="search"
+          placeholder="Nombre o Empresa"
+          (input)="filterData()"
+        />
+      </p-iconField>
+    </div>
+    <p-button
+      label="Crear"
+      icon="pi pi-plus text-xl"
+      iconPos="left"
+      severity="success"
+      (onClick)="showDialog(true)"
+    />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
-    <label for="empresa">Empresa</label>
-    <input
-      class="bg-slate-200"
-        pInputText
-        id="empresa"
-        name="empresa"
-        [(ngModel)]="proveedor.empresa" />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
-    <label for="telefono">Rubro</label>
-    <input
-      class="bg-slate-200"
-        pInputText
-        id="telefono"
-        name="telefono"
-        [(ngModel)]="proveedor.rubro" />
-  </div>
-  <div class="flex justify-content-end gap-2">
-    <p-button label="Cancel" severity="secondary" (onClick)="displayDialog = false" />
-    <p-button label="Save" (onClick)="addProveedor()" />
 </div>
-</p-dialog>
-<p-table [value]="proveedores" [tableStyle]="{ 'min-width': '50rem' }">
-  <ng-template pTemplate="header">
-      <tr>
-          <th>Nombre</th>
-          <th>Ruc</th>
-          <th>Empresa</th>
-          <th>Rubro</th>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-proveedor>
-      <tr>
+
+<div class="rounded-lg shadow-md bg-white p-4">
+  <div class="rounded-t-lg overflow-hidden">
+    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>NOMBRE</th>
+          <th>RUC</th>
+          <th>EMPRESA</th>
+          <th>RUBRO</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-proveedor>
+        <tr>
           <td>{{ proveedor.nombre }}</td>
           <td>{{ proveedor.ruc }}</td>
           <td>{{ proveedor.empresa }}</td>
           <td>{{ proveedor.rubro }}</td>
-      </tr>
-  </ng-template>
-</p-table>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-dialog
+  header="Crear Proveedor"
+  [(visible)]="dialog"
+  [modal]="true"
+  [style]="{ width: '25rem' }"
+  (onHide)="hideDialog()"
+>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
+    <label for="nombre">Nombre*</label>
+    <input
+      class="bg-slate-200"
+      pInputText
+      id="nombre"
+      name="nombre"
+      [(ngModel)]="proveedor.nombre"
+    />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
+    <label for="nombre">RUC</label>
+    <input
+      class="bg-slate-200"
+      pInputText
+      id="ruc"
+      name="ruc"
+      [(ngModel)]="proveedor.ruc"
+    />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
+    <label for="empresa">Empresa</label>
+    <input
+      class="bg-slate-200"
+      pInputText
+      id="empresa"
+      name="empresa"
+      [(ngModel)]="proveedor.empresa"
+    />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
+    <label for="rubro">Rubro</label>
+    <input
+      class="bg-slate-200"
+      pInputText
+      id="rubro"
+      name="rubro"
+      [(ngModel)]="proveedor.rubro"
+    />
+  </div>
+  <div class="flex gap-2 mt-4 justify-end">
+    <p-button
+      label="Cancelar"
+      severity="danger"
+      (onClick)="showDialog(false)"
+      icon="pi pi-times text-lg"
+      iconPos="left"
+    />
+    <p-button
+      label="Guardar"
+      (onClick)="addProveedor()"
+      icon="pi pi-save text-lg"
+      iconPos="left"
+    />
+  </div>
+</p-dialog>

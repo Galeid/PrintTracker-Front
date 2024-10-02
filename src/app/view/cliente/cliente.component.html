@@ -1,5 +1,5 @@
 <div class="flex justify-between mb-4">
-  <div class="flex gap-4">
+  <div class="flex gap-4 items-center">
     <p-button
       label="Regresar"
       icon="pi pi-angle-double-left text-xl"
@@ -7,28 +7,36 @@
       severity="secondary"
       (onClick)="router.navigate(['/dashboard'])"
     />
+    <div class="text-2xl font-semibold">Clientes</div>
+  </div>
+
+  <div class="flex gap-4 items-center">
+    <div class="flex gap-4 items-center">
+      <label class="font-semibold">Buscar por:</label>
+      <p-iconField iconPosition="right">
+        <p-inputIcon styleClass="pi pi-search" />
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="search"
+          placeholder="Nombre o Empresa"
+          (input)="filterData()"
+        />
+      </p-iconField>
+    </div>
     <p-button
       label="Crear"
       icon="pi pi-plus text-xl"
       iconPos="left"
       severity="success"
-      (onClick)="showDialog()"
-    />
-  </div>
-  <div class="flex gap-4 items-center">
-    <label class="font-semibold">Buscar por:</label>
-    <input
-      type="text"
-      pInputText
-      [(ngModel)]="search"
-      placeholder="Nombre o Empresa"
+      (onClick)="showDialog(true)"
     />
   </div>
 </div>
 
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
-    <p-table [value]="clientes" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
           <th>NOMBRE</th>
@@ -55,11 +63,12 @@
 
 <p-dialog
   header="Crear Cliente"
-  [(visible)]="displayDialog"
+  [(visible)]="dialog"
   [modal]="true"
   [style]="{ width: '25rem' }"
+  (onHide)="hideDialog()"
 >
-  <div class="flex flex-column gap-2 mt-2 justify-between">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
     <label for="nombre">Nombre*</label>
     <input
       class="bg-slate-200"
@@ -69,7 +78,7 @@
       [(ngModel)]="cliente.nombre"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
     <label for="nombre">RUC*</label>
     <input
       class="bg-slate-200"
@@ -79,7 +88,7 @@
       [(ngModel)]="cliente.ruc"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
     <label for="empresa">Empresa*</label>
     <input
       class="bg-slate-200"
@@ -89,7 +98,7 @@
       [(ngModel)]="cliente.empresa"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
     <label for="telefono">Telefono*</label>
     <input
       class="bg-slate-200"
@@ -99,7 +108,7 @@
       [(ngModel)]="cliente.telefono"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
     <label for="correo">Correo</label>
     <input
       class="bg-slate-200"
@@ -109,7 +118,7 @@
       [(ngModel)]="cliente.correo"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
     <label for="direccion">Dirreccion</label>
     <input
       class="bg-slate-200"
@@ -119,12 +128,19 @@
       [(ngModel)]="cliente.direccion"
     />
   </div>
-  <div class="flex justify-content-end gap-2">
+  <div class="flex gap-2 mt-4 justify-end">
     <p-button
-      label="Cancel"
-      severity="secondary"
-      (onClick)="displayDialog = false"
+      label="Cancelar"
+      severity="danger"
+      (onClick)="showDialog(false)"
+      icon="pi pi-times text-lg"
+      iconPos="left"
     />
-    <p-button label="Save" (onClick)="addCliente()" />
+    <p-button
+      label="Guardar"
+      (onClick)="addCliente()"
+      icon="pi pi-save text-lg"
+      iconPos="left"
+    />
   </div>
 </p-dialog>
