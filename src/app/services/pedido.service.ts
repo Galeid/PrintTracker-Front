@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { PedidoEntity } from '../entities/pedido/pedido.entity';
+import { PedidoModel } from '../entities/pedido/pedido.model';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -13,16 +16,15 @@ export class PedidoService {
 
   constructor(private http: HttpClient) {}
 
-  getPedidos(): Observable<any> {
-    return this.http.get(this.url + '/pedidos',this.headers);
+  get(): Observable<PedidoEntity[]> {
+    return this.http.get<PedidoEntity[]>(this.url + '/pedidos',this.headers);
   }
 
-  addPedido(pedido: any): Observable<any> {
-    return this.http.post(this.url + '/pedidos', pedido, this.headers);
+  add(model: PedidoModel): Observable<PedidoEntity> {
+    return this.http.post<PedidoEntity>(this.url + '/pedidos', model, this.headers);
   }
 
-  payPedido(id: string): Observable<any> {
-    return this.http.get(this.url + '/pedidos/pagar/' + id, this.headers);
+  pay(id: string): Observable<PedidoEntity> {
+    return this.http.get<PedidoEntity>(this.url + '/pedidos/pagar/' + id, this.headers);
   }
-
 }

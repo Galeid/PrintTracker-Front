@@ -61,43 +61,39 @@
   header="Crear Proveedor"
   [(visible)]="dialog"
   [modal]="true"
-  [style]="{ width: '25rem' }"
+  [style]="{ width: '28rem' }"
   (onHide)="hideDialog()"
 >
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
-    <label for="nombre">Nombre*</label>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label for="nombre">Nombre *</label>
     <input
-      class="bg-slate-200"
       pInputText
       id="nombre"
       name="nombre"
       [(ngModel)]="proveedor.nombre"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label for="nombre">RUC</label>
     <input
-      class="bg-slate-200"
       pInputText
       id="ruc"
       name="ruc"
       [(ngModel)]="proveedor.ruc"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label for="empresa">Empresa</label>
     <input
-      class="bg-slate-200"
       pInputText
       id="empresa"
       name="empresa"
       [(ngModel)]="proveedor.empresa"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center px-2">
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label for="rubro">Rubro</label>
     <input
-      class="bg-slate-200"
       pInputText
       id="rubro"
       name="rubro"

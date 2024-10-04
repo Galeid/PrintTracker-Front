@@ -7,7 +7,7 @@
       severity="secondary"
       (onClick)="router.navigate(['/dashboard'])"
     />
-    <div class="text-2xl font-semibold">Pedidos</div>
+    <div class="text-2xl font-semibold">Gastos</div>
   </div>
   <div class="flex gap-4 items-center">
     <p-button
@@ -25,45 +25,31 @@
     <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }">
       <ng-template pTemplate="header">
         <tr>
-          <th class="text-center">NRO</th>
-          <th>CLIENTE</th>
+          <th>PROVEEDOR</th>
           <th>DESCRIPCION</th>
-          <th>SERVICIO</th>
+          <th>RUBRO</th>
           <th class="text-center">MONTO</th>
-          <th class="text-center">CREADO EL</th>
-          <th class="text-center">ESTADO</th>
+          <th class="text-center">FECHA</th>
           <th class="text-center">TIPO PAGO</th>
-          <th class="text-center">PAGO</th>
-          <th class="text-center">PAGADO EL</th>
           <th class="text-center">ACCIONES</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-pedido>
+      <ng-template pTemplate="body" let-gasto>
         <tr>
-          <td class="text-center">#{{ pedido.nroPedido }}</td>
-          <td>{{ pedido.cliente?.nombre }}</td>
-          <td>{{ pedido.descripcion }}</td>
-          <td>{{ capitalize(pedido.tipo) }}</td>
-          <td class="text-center">{{ pedido.monto }}</td>
-          <td class="text-center">{{ formatDate(pedido.fecha) }}</td>
-          <td class="text-center">{{ capitalize(pedido.estado) }}</td>
-          <td class="text-center">{{ capitalize(pedido.tipoPago) }}</td>
-          <td class="text-center">{{ capitalize(pedido.estadoPago) }}</td>
-          <td class="text-center">{{ pedido.fechaPago ? formatDate(pedido.fechaPago) : "-" }}</td>
+          <td>{{ gasto.proveedor?.nombre }}</td>
+          <td>{{ gasto.descripcion }}</td>
+          <td>{{ capitalize(gasto.proveedor?.rubro) }}</td>
+          <td class="text-center">{{ gasto.monto }}</td>
+          <td class="text-center">{{ formatDate(gasto.fecha) }}</td>
+          <td class="text-center">{{ capitalize(gasto.tipoPago) }}</td>
           <td>
             <div class="flex gap-2 justify-evenly">
-              @if (pedido.estadoPago != "pagado") {
-              <p-button
-                icon="pi pi-dollar"
-                label="Pagar"
-                (click)="payPedido(pedido)"
-              />
-              } @if (isToday(pedido.fecha)) {
+              @if (isToday(gasto.fecha)) {
               <p-button
                 icon="pi pi-times"
                 label="Anular"
                 severity="danger"
-                (click)="cancelPedido(pedido)"
+                (click)="cancelGasto(gasto)"
               />
               }
             </div>
@@ -75,7 +61,7 @@
 </div>
 
 <p-dialog
-  header="Crear Pedido"
+  header="Crear Gasto"
   [(visible)]="dialog"
   [modal]="true"
   [style]="{ width: '30rem' }"
@@ -84,22 +70,26 @@
 >
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Fecha *</label>
-    <p-calendar [(ngModel)]="pedido.fecha" dateFormat="dd/mm/yy" />
+    <p-calendar [(ngModel)]="gasto.fecha" dateFormat="dd/mm/yy" />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Cliente *</label>
+    <label>Proveedor *</label>
     <p-autoComplete
-      [(ngModel)]="clienteSelected"
-      [suggestions]="clientesFiltered"
-      (completeMethod)="filterCliente($event)"
+      [(ngModel)]="proveedorSelected"
+      [suggestions]="proveedoresFiltered"
+      (completeMethod)="filterProveedor($event)"
       field="nombre"
     />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Servicio *</label>
+    <label>Descripcion *</label>
+    <input pInputText name="descripcion" [(ngModel)]="gasto.descripcion" />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label>Tipo de Pago *</label>
     <p-dropdown
-      [options]="tipoOptions"
-      [(ngModel)]="pedido.tipo"
+      [options]="pagoOptions"
+      [(ngModel)]="gasto.tipoPago"
       optionLabel="label"
       optionValue="value"
       styleClass="w-[242px]"
@@ -113,23 +103,12 @@
       mode="decimal"
       [maxFractionDigits]="2"
       locale="en-US"
-      [(ngModel)]="pedido.monto"
+      [(ngModel)]="gasto.monto"
     />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Tipo de Pago *</label>
-    <p-dropdown
-      [options]="pagoOptions"
-      [(ngModel)]="pedido.tipoPago"
-      optionLabel="label"
-      optionValue="value"
-      styleClass="w-[242px]"
-      scrollHeight="110px"
-    />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Descripcion *</label>
-    <input pInputText name="descripcion" [(ngModel)]="pedido.descripcion" />
+    <label>Nro Factura</label>
+    <input pInputText name="factura" [(ngModel)]="gasto.nroFactura" />
   </div>
   <div class="flex gap-2 mt-4 justify-end">
     <p-button
@@ -141,7 +120,7 @@
     />
     <p-button
       label="Guardar"
-      (onClick)="addPedido()"
+      (onClick)="addGasto()"
       icon="pi pi-save text-lg"
       iconPos="left"
     />

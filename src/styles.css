@@ -83,5 +83,30 @@ img, video, svg {
 }
 
 .p-dialog .p-dialog-content {
-  padding: 0 1rem 1rem 1rem
+  padding: 0 2.5rem 1rem 2.5rem
+}
+
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 0.5rem 1rem;
+}
+
+.p-dropdown-panel .p-dropdown-items {
+  padding: 0.4rem 0;
+}
+
+.p-datepicker table td {
+  padding: 0;
+}
+
+.p-datepicker table td > span {
+  width:2rem;
+  height: 2rem;
+}
+
+.p-datepicker table {
+  margin-bottom: 0;  margin-top: 0.25rem;
+}
+
+.p-datepicker .p-datepicker-header {
+  padding: 0;
 }

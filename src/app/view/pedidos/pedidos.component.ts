@@ -1,18 +1,52 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
-import { PedidoService } from '../../services/pedido.service';
-import { Router } from '@angular/router';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from 'primeng/autocomplete';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
+
+import { PedidoService } from '../../services/pedido.service';
 import { ClienteService } from '../../services/cliente.service';
 import { ClienteEntity } from '../../entities/cliente/cliente.entity';
+import { PedidoEntity } from '../../entities/pedido/pedido.entity';
+import { PedidoModel } from '../../entities/pedido/pedido.model';
+import { TipoPago, TipoPedido } from '../../entities/enums/pedido.enums';
+
+const model: PedidoModel = {
+  descripcion: '',
+  monto: 0,
+  tipo: TipoPedido.OTRO,
+  tipoPago: TipoPago.EFECTIVO,
+  fecha: new Date(),
+  idUsuario: '',
+  idCliente: '',
+  idCaja: '',
+};
+
+const tipoOptions = [
+  { value: TipoPedido.OTRO, label: 'Otro' },
+  { value: TipoPedido.TARJETAS, label: 'Tarjetas' },
+  { value: TipoPedido.VOLANTES, label: 'Volantes' },
+  { value: TipoPedido.SERVICIO_OFFSET, label: 'Servicio Offset' },
+  { value: TipoPedido.SERVICIO_PLASTICO, label: 'Servicio de Plástico' },
+];
+
+const pagoOptions = [
+  { value: TipoPago.EFECTIVO, label: 'Efectivo' },
+  { value: TipoPago.YAPE, label: 'Yape' },
+  { value: TipoPago.TRANSFERENCIA, label: 'Transferencia' },
+];
+
 @Component({
   selector: 'app-pedidos',
   standalone: true,
@@ -24,41 +58,29 @@ import { ClienteEntity } from '../../entities/cliente/cliente.entity';
     FormsModule,
     ButtonModule,
     InputNumberModule,
-    DropdownModule,CalendarModule,AutoCompleteModule
+    DropdownModule,
+    CalendarModule,
+    AutoCompleteModule,
   ],
   templateUrl: './pedidos.component.html',
   styleUrl: './pedidos.component.css',
 })
 export class PedidosComponent implements OnInit {
-  tipoServicio = [
-    { value: 'tarjetas', label: 'Tarjetas' },
-    { value: 'volantes', label: 'Volantes' },
-    { value: 'offset', label: 'Servicio Offset' },
-    { value: 'plastico', label: 'Servicio de Plástico' },
-    { value: 'otro', label: 'Otro' },
-  ];
-  tipoPago = [
-    { value: 'efectivo', label: 'Efectivo' },
-    { value: 'yape', label: 'Yape' },
-    { value: 'transferencia', label: 'Transferencia' },
-  ];
-  filteredClientes:any[]= []
-  displayDialog = false;
-  pedidos = [];
-  pedido: any = {
-    descripcion: '',
-    monto: 0,
-    tipo: 'otro',
-    tipoPago: 'efectivo',
-    fecha: new Date(),
-    idUsuario: '',
-    idCliente: '',
-    idCaja:'',
-  };
-  clientes: ClienteEntity[] = []
-  clienteSelected:any
+  pedido: PedidoModel = model;
+  pedidos: PedidoEntity[] = [];
+  dialog: boolean = false;
+  dataFiltered: PedidoEntity[] = [];
+  clienteSelected: ClienteEntity | undefined;
+  clientes: ClienteEntity[] = [];
+  clientesFiltered: ClienteEntity[] = [];
+  tipoOptions = tipoOptions;
+  pagoOptions = pagoOptions;
 
-  constructor(private pedidoService: PedidoService, public router: Router, private clienteService: ClienteService) {}
+  constructor(
+    private pedidoService: PedidoService,
+    private clienteService: ClienteService,
+    public router: Router
+  ) {}
 
   ngOnInit(): void {
     this.getPedidos();
@@ -67,74 +89,83 @@ export class PedidosComponent implements OnInit {
 
   getClientes() {
     this.clienteService.get().subscribe({
-      next: (clientes) => (this.clientes = clientes),
+      next: (data) => {
+        this.clientes = [...data];
+        this.clientesFiltered = [...data];
+      },
       error: (error) => console.error('Error:', error),
     });
   }
 
-  showDialog() {
-    this.displayDialog = true;
-  }
-
   getPedidos(): void {
-    this.pedidoService.getPedidos().subscribe({
-      next: (pedidos) => (this.pedidos = pedidos),
+    this.pedidoService.get().subscribe({
+      next: (data) => {
+        this.pedidos = [...data];
+        this.dataFiltered = [...data];
+      },
       error: (error) => console.error('Error:', error),
     });
   }
 
   addPedido() {
-    this.pedido.idCliente = this.clienteSelected.id;
-    this.pedido.idUsuario = localStorage.getItem('idUsuario');
-    this.pedidoService.addPedido(this.pedido).subscribe({
+    this.pedido.idCliente = this.clienteSelected?.id || '';
+    this.pedido.idUsuario = localStorage.getItem('idUsuario') || '';
+    this.pedidoService.add(this.pedido).subscribe({
       next: () => {
-        console.log('Cliente agregado correctamente');
-        this.displayDialog = false;
-        this.pedido = {
-          descripcion: '',
-          monto: 0,
-          tipo: 'otro',
-          tipoPago: 'efectivo',
-          fecha: new Date(),
-          idUsuario: '',
-          idCliente: '',
-          idCaja:'',
-        };
-        this.clienteSelected = undefined
+        this.dialog = false;
         this.getPedidos();
       },
       error: (error) => console.error('Error:', error),
     });
   }
 
-  filterCliente(event: AutoCompleteCompleteEvent) {
-    let filtered: any[] = [];
-    let query = event.query;
-
-    for (let i = 0; i < (this.clientes as any[]).length; i++) {
-        let cliente = (this.clientes as any[])[i];
-        if (cliente.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-            filtered.push(cliente);
-        }
-    }
-    this.filteredClientes = filtered;
-  }
-
-  pagarPedido(pedido:any) {
-    this.pedidoService.payPedido(pedido.id).subscribe({
+  payPedido(pedido: any) {
+    this.pedidoService.pay(pedido.id).subscribe({
       next: () => {
         console.log('Pedido pagado correctamente');
         this.getPedidos();
       },
       error: (error) => console.error('Error:', error),
-    })
+    });
   }
 
-  anularPedido(pedido:any) {
+  cancelPedido(pedido: any) {}
 
+  filterCliente(event: AutoCompleteCompleteEvent) {
+    let filtered: ClienteEntity[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < this.clientes.length; i++) {
+      let cliente = this.clientes[i];
+      if (cliente.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(cliente);
+      }
+    }
+    this.clientesFiltered = filtered;
   }
 
-  isToday(fecha:Date) {
-    return new Date(fecha).getDate() === new Date().getDate()
+  showDialog(visible: boolean) {
+    this.dialog = visible;
+  }
+
+  hideDialog() {
+    this.pedido = model;
+    this.clienteSelected = undefined;
+  }
+
+  isToday(fecha: Date) {
+    return new Date(fecha).getDate() === new Date().getDate();
+  }
+
+  capitalize(string: string) {
+    return string && string[0].toUpperCase() + string.slice(1);
+  }
+
+  formatDate(dateToFormat: Date): string {
+    const date = new Date(dateToFormat);
+    const dia = date.getDate().toString().padStart(2, '0');
+    const mes = (date.getMonth() + 1).toString().padStart(2, '0');
+    const anio = date.getFullYear().toString().slice(0);
+    return `${dia}/${mes}/${anio}`;
   }
 }

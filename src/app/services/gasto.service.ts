@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { GastoModel } from '../entities/gasto/gasto.model';
+import { GastoEntity } from '../entities/gasto/gasto.entity';
 
 @Injectable({
   providedIn: 'root',
@@ -13,12 +15,12 @@ export class GastoService {
 
   constructor(private http: HttpClient) {}
 
-  getGastos(): Observable<any> {
-    return this.http.get(this.url + '/gastos',this.headers);
+  get(): Observable<GastoEntity[]> {
+    return this.http.get<GastoEntity[]>(this.url + '/gastos',this.headers);
   }
 
-  addGasto(gasto: any): Observable<any> {
-    return this.http.post(this.url + '/gastos', gasto, this.headers);
+  add(model: GastoModel): Observable<GastoEntity> {
+    return this.http.post<GastoEntity>(this.url + '/gastos', model, this.headers);
   }
 
 }

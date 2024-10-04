@@ -28,9 +28,9 @@ export class SidebarLayoutComponent {
       route: '/pedidos',
     },
     {
-      title: 'Pagos',
+      title: 'Gastos',
       icon: 'pi pi-arrow-circle-down',
-      route: '/pagos',
+      route: '/gastos',
     },
     {
       title: 'Registros',

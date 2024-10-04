@@ -4,7 +4,7 @@ import { ClienteComponent } from './view/cliente/cliente.component';
 import { DashboardComponent } from './view/dashboard/dashboard.component';
 import { ProveedorComponent } from './view/proveedor/proveedor.component';
 import { PedidosComponent } from './view/pedidos/pedidos.component';
-import { PagosComponent } from './view/pagos/pagos.component';
+import { GastosComponent } from './view/gastos/gastos.component';
 import { inject } from '@angular/core';
 import { MainLayoutComponent } from './layouts/main/main.component';
 import { RegistrosComponent } from './view/registros/registros.component';
@@ -39,8 +39,8 @@ export const routes: Routes = [
         canActivate: [redirectLogin],
       },
       {
-        path: 'pagos',
-        component: PagosComponent,
+        path: 'gastos',
+        component: GastosComponent,
         canActivate: [redirectLogin],
       },
       {
