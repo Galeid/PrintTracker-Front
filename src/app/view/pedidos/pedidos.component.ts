@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -75,6 +75,7 @@ export class PedidosComponent implements OnInit {
   clientesFiltered: ClienteEntity[] = [];
   tipoOptions = tipoOptions;
   pagoOptions = pagoOptions;
+  @Input() clienteId: string | undefined;
 
   constructor(
     private pedidoService: PedidoService,
@@ -98,13 +99,23 @@ export class PedidosComponent implements OnInit {
   }
 
   getPedidos(): void {
-    this.pedidoService.get().subscribe({
-      next: (data) => {
-        this.pedidos = [...data];
-        this.dataFiltered = [...data];
-      },
-      error: (error) => console.error('Error:', error),
-    });
+    if (this.clienteId) {
+      this.pedidoService.getByCliente(this.clienteId).subscribe({
+        next: (data) => {
+          this.pedidos = [...data];
+          this.dataFiltered = [...data];
+        },
+        error: (error) => console.error('Error:', error),
+      });
+    } else {
+      this.pedidoService.get().subscribe({
+        next: (data) => {
+          this.pedidos = [...data];
+          this.dataFiltered = [...data];
+        },
+        error: (error) => console.error('Error:', error),
+      });
+    }
   }
 
   addPedido() {

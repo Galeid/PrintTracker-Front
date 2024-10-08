@@ -45,6 +45,7 @@
           <th>TELEFONO</th>
           <th class="text-center">CORREO</th>
           <th>DIRECCION</th>
+          <th class="text-center">ACCIONES</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-cliente>
@@ -55,6 +56,15 @@
           <td>{{ cliente.telefono }}</td>
           <td class="text-center">{{ cliente.correo }}</td>
           <td>{{ cliente.direccion }}</td>
+          <td class="text-center">
+            <div class="flex gap-2 justify-evenly">
+              <p-button
+                icon="pi pi-shopping-bag"
+                label="Pedidos"
+                (onClick)="router.navigate(['/clientes/'+cliente.id+'/pedidos'])"
+              />
+            </div>
+          </td>
         </tr>
       </ng-template>
     </p-table>

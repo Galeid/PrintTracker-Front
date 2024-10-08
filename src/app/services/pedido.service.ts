@@ -20,6 +20,10 @@ export class PedidoService {
     return this.http.get<PedidoEntity[]>(this.url + '/pedidos',this.headers);
   }
 
+  getByCliente(id:string): Observable<PedidoEntity[]> {
+    return this.http.get<PedidoEntity[]>(this.url + '/pedidos/cliente/' + id,this.headers);
+  }
+
   add(model: PedidoModel): Observable<PedidoEntity> {
     return this.http.post<PedidoEntity>(this.url + '/pedidos', model, this.headers);
   }

@@ -24,6 +24,11 @@ export const routes: Routes = [
         canActivate: [redirectLogin],
       },
       {
+        path: 'clientes/:clienteId/pedidos',
+        component: PedidosComponent,
+        canActivate: [redirectLogin],
+      },
+      {
         path: 'proveedores',
         component: ProveedorComponent,
         canActivate: [redirectLogin],
