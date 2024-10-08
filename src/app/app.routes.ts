@@ -34,6 +34,11 @@ export const routes: Routes = [
         canActivate: [redirectLogin],
       },
       {
+        path: 'proveedores/:proveedorId/gastos',
+        component: GastosComponent,
+        canActivate: [redirectLogin],
+      },
+      {
         path: 'pedidos',
         component: PedidosComponent,
         canActivate: [redirectLogin],

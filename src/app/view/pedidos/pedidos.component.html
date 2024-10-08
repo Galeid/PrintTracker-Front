@@ -5,9 +5,11 @@
       icon="pi pi-angle-double-left text-xl"
       iconPos="left"
       severity="secondary"
-      (onClick)="router.navigate(['/dashboard'])"
+      (onClick)="clienteId ? router.navigate(['/clientes']) : router.navigate(['/dashboard'])"
     />
-    <div class="text-2xl font-semibold">Pedidos</div>
+    <div class="text-2xl font-semibold">
+      Pedidos @if (clienteId) { de {{getClienteById(clienteId)?.nombre}}}
+    </div>
   </div>
   <div class="flex gap-4 items-center">
     <p-button

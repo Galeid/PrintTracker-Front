@@ -155,6 +155,10 @@ export class PedidosComponent implements OnInit {
     this.clientesFiltered = filtered;
   }
 
+  getClienteById(id:string): ClienteEntity | undefined {
+    return this.clientes.find((cliente) => cliente.id === id);
+  }
+
   showDialog(visible: boolean) {
     this.dialog = visible;
   }
