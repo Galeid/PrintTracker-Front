@@ -66,9 +66,10 @@ const pagoOptions = [
   styleUrl: './pedidos.component.css',
 })
 export class PedidosComponent implements OnInit {
-  pedido: PedidoModel = model;
+  pedido: PedidoModel = {...model};
   pedidos: PedidoEntity[] = [];
   dialog: boolean = false;
+  payDialog: boolean = false;
   dataFiltered: PedidoEntity[] = [];
   clienteSelected: ClienteEntity | undefined;
   clientes: ClienteEntity[] = [];
@@ -76,6 +77,8 @@ export class PedidosComponent implements OnInit {
   tipoOptions = tipoOptions;
   pagoOptions = pagoOptions;
   @Input() clienteId: string | undefined;
+  tipoPago: TipoPago = TipoPago.EFECTIVO;
+  payId: string = '';
 
   constructor(
     private pedidoService: PedidoService,
@@ -130,11 +133,12 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  payPedido(pedido: any) {
-    this.pedidoService.pay(pedido.id).subscribe({
+  payPedido(id:string) {
+    this.pedidoService.pay(id, this.tipoPago).subscribe({
       next: () => {
         console.log('Pedido pagado correctamente');
         this.getPedidos();
+        this.showPayDialog(false);
       },
       error: (error) => console.error('Error:', error),
     });
@@ -163,9 +167,16 @@ export class PedidosComponent implements OnInit {
     this.dialog = visible;
   }
 
+  showPayDialog(visible: boolean, id?:string) {
+    this.payDialog = visible;
+    if (id) this.payId = id;
+  }
+
   hideDialog() {
-    this.pedido = model;
+    this.pedido = {...model};
     this.clienteSelected = undefined;
+    this.payId=''
+    this.tipoPago=TipoPago.EFECTIVO
   }
 
   isToday(fecha: Date) {

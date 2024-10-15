@@ -43,6 +43,7 @@
           <th>EMPRESA</th>
           <th>RUC</th>
           <th>RUBRO</th>
+          <th class="text-center">ACCIONES</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-proveedor>
@@ -51,6 +52,20 @@
           <td>{{ proveedor.empresa }}</td>
           <td>{{ proveedor.ruc }}</td>
           <td>{{ proveedor.rubro }}</td>
+          <td class="text-center">
+            <div class="flex gap-2 justify-evenly">
+              <p-button
+                icon="pi pi-pencil"
+                label="Editar"
+                (onClick)="showUpdateDialog(proveedor)"
+              />
+              <p-button
+                icon="pi pi-arrow-circle-down"
+                label="Gastos"
+                (onClick)="router.navigate(['/proveedores/' + proveedor.id + '/gastos'])"
+              />
+            </div>
+          </td>
         </tr>
       </ng-template>
     </p-table>
@@ -58,7 +73,7 @@
 </div>
 
 <p-dialog
-  header="Crear Proveedor"
+  [header]="updateId==''? 'Crear Proveedor' : 'Editar Proveedor'"
   [(visible)]="dialog"
   [modal]="true"
   [style]="{ width: '28rem' }"

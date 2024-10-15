@@ -60,6 +60,11 @@ img, video, svg {
   padding: 0.5rem
 }
 
+td .p-button {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
 .p-icon-field.p-icon-field-right .p-inputtext {
   padding-right: 2.25rem
 }
@@ -69,12 +74,12 @@ img, video, svg {
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-  padding: 0.625rem;
+  padding: 0.5rem;
   background-color: #E2E8F0;
 }
 
 .p-datatable .p-datatable-tbody > tr > td {
-  padding: 0.625rem;
+  padding: 0.5rem;
 }
 
 .p-dialog .p-dialog-header {

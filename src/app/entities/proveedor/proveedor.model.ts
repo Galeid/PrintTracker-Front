@@ -1,6 +1,6 @@
 export interface ProveedorModel {
   nombre: string;
-  ruc?: string;
-  empresa?: string;
-  rubro?: string;
+  ruc?: string | null;
+  empresa?: string | null;
+  rubro?: string | null;
 }

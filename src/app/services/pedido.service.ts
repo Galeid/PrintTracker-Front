@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { PedidoEntity } from '../entities/pedido/pedido.entity';
 import { PedidoModel } from '../entities/pedido/pedido.model';
+import { TipoPago } from '../entities/enums/pedido.enums';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,7 @@ export class PedidoService {
     return this.http.post<PedidoEntity>(this.url + '/pedidos', model, this.headers);
   }
 
-  pay(id: string): Observable<PedidoEntity> {
-    return this.http.get<PedidoEntity>(this.url + '/pedidos/pagar/' + id, this.headers);
+  pay(id: string, tipoPago: TipoPago): Observable<PedidoEntity> {
+    return this.http.patch<PedidoEntity>(this.url + '/pedidos/pagar/' + id,{tipoPago}, this.headers);
   }
 }

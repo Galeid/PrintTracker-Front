@@ -30,4 +30,12 @@ export class ProveedorService {
       this.headers
     );
   }
+
+  update(model: ProveedorModel, id: string): Observable<ProveedorEntity> {
+    return this.http.patch<ProveedorEntity>(
+      this.url + '/proveedores/' + id,
+      model,
+      this.headers
+    );
+  }
 }

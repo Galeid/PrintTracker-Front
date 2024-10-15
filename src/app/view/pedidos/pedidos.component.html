@@ -5,10 +5,14 @@
       icon="pi pi-angle-double-left text-xl"
       iconPos="left"
       severity="secondary"
-      (onClick)="clienteId ? router.navigate(['/clientes']) : router.navigate(['/dashboard'])"
+      (onClick)="
+        clienteId
+          ? router.navigate(['/clientes'])
+          : router.navigate(['/dashboard'])
+      "
     />
     <div class="text-2xl font-semibold">
-      Pedidos @if (clienteId) { de {{getClienteById(clienteId)?.nombre}}}
+      Pedidos @if (clienteId) { de {{ getClienteById(clienteId)?.nombre }}}
     </div>
   </div>
   <div class="flex gap-4 items-center">
@@ -49,16 +53,20 @@
           <td class="text-center">{{ pedido.monto }}</td>
           <td class="text-center">{{ formatDate(pedido.fecha) }}</td>
           <td class="text-center">{{ capitalize(pedido.estado) }}</td>
-          <td class="text-center">{{ capitalize(pedido.tipoPago) }}</td>
+          <td class="text-center">
+            {{ pedido.fechaPago ? capitalize(pedido.tipoPago) : "-" }}
+          </td>
           <td class="text-center">{{ capitalize(pedido.estadoPago) }}</td>
-          <td class="text-center">{{ pedido.fechaPago ? formatDate(pedido.fechaPago) : "-" }}</td>
+          <td class="text-center">
+            {{ pedido.fechaPago ? formatDate(pedido.fechaPago) : "-" }}
+          </td>
           <td>
             <div class="flex gap-2 justify-evenly">
               @if (pedido.estadoPago != "pagado") {
               <p-button
                 icon="pi pi-dollar"
                 label="Pagar"
-                (click)="payPedido(pedido)"
+                (click)="showPayDialog(true, pedido.id)"
               />
               } @if (isToday(pedido.fecha)) {
               <p-button
@@ -89,15 +97,6 @@
     <p-calendar [(ngModel)]="pedido.fecha" dateFormat="dd/mm/yy" />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Cliente *</label>
-    <p-autoComplete
-      [(ngModel)]="clienteSelected"
-      [suggestions]="clientesFiltered"
-      (completeMethod)="filterCliente($event)"
-      field="nombre"
-    />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Servicio *</label>
     <p-dropdown
       [options]="tipoOptions"
@@ -105,6 +104,15 @@
       optionLabel="label"
       optionValue="value"
       styleClass="w-[242px]"
+    />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label>Cliente *</label>
+    <p-autoComplete
+      [(ngModel)]="clienteSelected"
+      [suggestions]="clientesFiltered"
+      (completeMethod)="filterCliente($event)"
+      field="nombre"
     />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
@@ -116,17 +124,6 @@
       [maxFractionDigits]="2"
       locale="en-US"
       [(ngModel)]="pedido.monto"
-    />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Tipo de Pago *</label>
-    <p-dropdown
-      [options]="pagoOptions"
-      [(ngModel)]="pedido.tipoPago"
-      optionLabel="label"
-      optionValue="value"
-      styleClass="w-[242px]"
-      scrollHeight="110px"
     />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
@@ -144,6 +141,42 @@
     <p-button
       label="Guardar"
       (onClick)="addPedido()"
+      icon="pi pi-save text-lg"
+      iconPos="left"
+    />
+  </div>
+</p-dialog>
+
+<p-dialog
+  header="Pago de Pedido"
+  [(visible)]="payDialog"
+  [modal]="true"
+  [style]="{ width: '30rem' }"
+  (onHide)="hideDialog()"
+  focusOnShow="false"
+>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label>Tipo de Pago *</label>
+    <p-dropdown
+      [options]="pagoOptions"
+      [(ngModel)]="tipoPago"
+      optionLabel="label"
+      optionValue="value"
+      styleClass="w-[242px]"
+      scrollHeight="110px"
+    />
+  </div>
+  <div class="flex gap-2 mt-16 justify-end">
+    <p-button
+      label="Cancelar"
+      severity="danger"
+      (onClick)="showPayDialog(false)"
+      icon="pi pi-times text-lg"
+      iconPos="left"
+    />
+    <p-button
+      label="Guardar"
+      (onClick)="payPedido(payId)"
       icon="pi pi-save text-lg"
       iconPos="left"
     />

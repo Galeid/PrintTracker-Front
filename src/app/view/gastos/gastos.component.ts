@@ -1,10 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import {
-  AutoCompleteCompleteEvent,
-  AutoCompleteModule,
-} from 'primeng/autocomplete';
+import { Router } from '@angular/router';
+
 import { ButtonModule } from 'primeng/button';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
@@ -12,8 +10,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
+
 import { GastoService } from '../../services/gasto.service';
-import { Router } from '@angular/router';
 import { ProveedorService } from '../../services/proveedor.service';
 import { ProveedorEntity } from '../../entities/proveedor/proveedor.entity';
 import { GastoModel } from '../../entities/gasto/gasto.model';
@@ -56,7 +58,7 @@ const pagoOptions = [
   styleUrl: './gastos.component.css',
 })
 export class GastosComponent implements OnInit {
-  gasto: GastoModel = model;
+  gasto: GastoModel = {...model};
   gastos: GastoEntity[] = [];
   dialog: boolean = false;
   dataFiltered: GastoEntity[] = [];
@@ -64,6 +66,7 @@ export class GastosComponent implements OnInit {
   proveedores: ProveedorEntity[] = [];
   proveedoresFiltered: ProveedorEntity[] = [];
   pagoOptions = pagoOptions;
+  @Input() proveedorId: string | undefined;
 
   constructor(
     private gastoService: GastoService,
@@ -87,12 +90,22 @@ export class GastosComponent implements OnInit {
   }
 
   getGastos(): void {
-    this.gastoService.get().subscribe({
-      next: (data) => {
-        (this.gastos = [...data]), (this.dataFiltered = [...data]);
-      },
-      error: (error) => console.error('Error:', error),
-    });
+    if (this.proveedorId) {
+      this.gastoService.getByProveedor(this.proveedorId).subscribe({
+        next: (data) => {
+          this.gastos = [...data];
+          this.dataFiltered = [...data];
+        },
+        error: (error) => console.error('Error:', error),
+      });
+    } else {
+      this.gastoService.get().subscribe({
+        next: (data) => {
+          (this.gastos = [...data]), (this.dataFiltered = [...data]);
+        },
+        error: (error) => console.error('Error:', error),
+      });
+    }
   }
 
   addGasto() {
@@ -120,6 +133,10 @@ export class GastosComponent implements OnInit {
       }
     }
     this.proveedoresFiltered = filtered;
+  }
+
+  getProveedorById(id:string): ProveedorEntity | undefined {
+    return this.proveedores.find((proveedor) => proveedor.id === id);
   }
 
   showDialog(visible: boolean) {

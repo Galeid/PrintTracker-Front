@@ -19,6 +19,10 @@ export class GastoService {
     return this.http.get<GastoEntity[]>(this.url + '/gastos',this.headers);
   }
 
+  getByProveedor(id:string): Observable<GastoEntity[]> {
+    return this.http.get<GastoEntity[]>(this.url + '/gastos/proveedor/' + id,this.headers);
+  }
+
   add(model: GastoModel): Observable<GastoEntity> {
     return this.http.post<GastoEntity>(this.url + '/gastos', model, this.headers);
   }

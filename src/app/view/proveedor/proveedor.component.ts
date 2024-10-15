@@ -16,9 +16,9 @@ import { ProveedorEntity } from '../../entities/proveedor/proveedor.entity';
 
 const model: ProveedorModel = {
   nombre: '',
-  ruc: '',
-  empresa: '',
-  rubro: '',
+  ruc: null,
+  empresa: null,
+  rubro: null,
 };
 
 @Component({
@@ -38,11 +38,12 @@ const model: ProveedorModel = {
   styleUrl: './proveedor.component.css',
 })
 export class ProveedorComponent implements OnInit {
-  proveedor: ProveedorModel = model;
+  proveedor: ProveedorModel = {...model};
   proveedores: ProveedorEntity[] = [];
   dialog: boolean = false;
   search: string = '';
   dataFiltered: ProveedorEntity[] = [];
+  updateId: string = '';
 
   constructor(
     private proveedorService: ProveedorService,
@@ -58,7 +59,8 @@ export class ProveedorComponent implements OnInit {
   }
 
   hideDialog() {
-    this.proveedor = model;
+    this.proveedor = {...model};
+    this.updateId = ''
   }
 
   getProveedores(): void {
@@ -72,9 +74,27 @@ export class ProveedorComponent implements OnInit {
   }
 
   addProveedor() {
+    this.proveedor.ruc = this.proveedor.ruc == '' ? null : this.proveedor.ruc;
+    this.proveedor.empresa = this.proveedor.empresa == '' ? null : this.proveedor.empresa;
+    this.proveedor.rubro = this.proveedor.rubro == '' ? null : this.proveedor.rubro;
+
     this.proveedorService.add(this.proveedor).subscribe({
       next: () => {
-        this.dialog = false;
+        this.showDialog(false)
+        this.getProveedores();
+      },
+      error: (error) => console.error('Error:', error),
+    });
+  }
+
+  updateProveedor() {
+    this.proveedor.ruc = this.proveedor.ruc == '' ? null : this.proveedor.ruc;
+    this.proveedor.empresa = this.proveedor.empresa == '' ? null : this.proveedor.empresa;
+    this.proveedor.rubro = this.proveedor.rubro == '' ? null : this.proveedor.rubro;
+
+    this.proveedorService.update(this.proveedor,this.updateId).subscribe({
+      next: () => {
+        this.showDialog(false)
         this.getProveedores();
       },
       error: (error) => console.error('Error:', error),
@@ -87,5 +107,11 @@ export class ProveedorComponent implements OnInit {
         item.nombre.toLowerCase().includes(this.search.toLowerCase()) ||
         item.empresa.toLowerCase().includes(this.search.toLowerCase())
     );
+  }
+
+  showUpdateDialog(proveedor: ProveedorEntity) {
+    this.updateId = proveedor.id;
+    this.proveedor = {...proveedor };
+    this.showDialog(true)
   }
 }

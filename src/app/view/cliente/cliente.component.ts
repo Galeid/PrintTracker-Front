@@ -16,11 +16,11 @@ import { ClienteEntity } from '../../entities/cliente/cliente.entity';
 
 const model: ClienteModel = {
   nombre: '',
-  ruc: '',
+  ruc: null,
   empresa: '',
-  direccion: '',
+  direccion: null,
   telefono: '',
-  correo: '',
+  correo: null,
 };
 
 @Component({
@@ -40,11 +40,12 @@ const model: ClienteModel = {
   styleUrl: './cliente.component.css',
 })
 export class ClienteComponent implements OnInit {
-  cliente: ClienteModel = model;
+  cliente: ClienteModel = {...model};
   clientes: ClienteEntity[] = [];
   dialog: boolean = false;
   search: string = '';
   dataFiltered: ClienteEntity[] = [];
+  updateId: string = '';
 
   constructor(private clienteService: ClienteService, public router: Router) {}
 
@@ -57,7 +58,8 @@ export class ClienteComponent implements OnInit {
   }
 
   hideDialog() {
-    this.cliente = model;
+    this.cliente = {...model};
+    this.updateId = ''
   }
 
   getClientes() {
@@ -73,9 +75,27 @@ export class ClienteComponent implements OnInit {
   }
 
   addCliente() {
+    this.cliente.ruc = this.cliente.ruc == '' ? null : this.cliente.ruc;
+    this.cliente.direccion = this.cliente.direccion == '' ? null : this.cliente.direccion;
+    this.cliente.correo = this.cliente.correo == '' ? null : this.cliente.correo;
+
     this.clienteService.add(this.cliente).subscribe({
       next: () => {
-        this.dialog = false;
+        this.showDialog(false)
+        this.getClientes();
+      },
+      error: (error) => console.error('Error:', error),
+    });
+  }
+
+  updateCliente() {
+    this.cliente.ruc = this.cliente.ruc == '' ? null : this.cliente.ruc;
+    this.cliente.direccion = this.cliente.direccion == '' ? null : this.cliente.direccion;
+    this.cliente.correo = this.cliente.correo == '' ? null : this.cliente.correo;
+
+    this.clienteService.update(this.cliente, this.updateId).subscribe({
+      next: () => {
+        this.showDialog(false)
         this.getClientes();
       },
       error: (error) => console.error('Error:', error),
@@ -88,5 +108,11 @@ export class ClienteComponent implements OnInit {
         item.nombre.toLowerCase().includes(this.search.toLowerCase()) ||
         item.empresa.toLowerCase().includes(this.search.toLowerCase())
     );
+  }
+
+  showUpdateDialog(cliente: ClienteEntity) {
+    this.updateId = cliente.id;
+    this.cliente = {...cliente };
+    this.showDialog(true)
   }
 }

@@ -27,4 +27,12 @@ export class ClienteService {
       this.headers
     );
   }
+
+  update(model: ClienteModel, id: string): Observable<ClienteEntity> {
+    return this.http.patch<ClienteEntity>(
+      this.url + '/clientes/' + id,
+      model,
+      this.headers
+    );
+  }
 }
