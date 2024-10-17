@@ -9,6 +9,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import {
+  AutoCompleteCompleteEvent,
+  AutoCompleteModule,
+} from 'primeng/autocomplete';
 
 import { ProveedorService } from '../../services/proveedor.service';
 import { ProveedorModel } from '../../entities/proveedor/proveedor.model';
@@ -33,17 +37,20 @@ const model: ProveedorModel = {
     CommonModule,
     FormsModule,
     ButtonModule,
+    AutoCompleteModule,
   ],
   templateUrl: './proveedor.component.html',
   styleUrl: './proveedor.component.css',
 })
 export class ProveedorComponent implements OnInit {
-  proveedor: ProveedorModel = {...model};
+  proveedor: ProveedorModel = { ...model };
   proveedores: ProveedorEntity[] = [];
   dialog: boolean = false;
   search: string = '';
   dataFiltered: ProveedorEntity[] = [];
   updateId: string = '';
+  rubrosFiltered: string[] = [];
+  rubros: string[] = [];
 
   constructor(
     private proveedorService: ProveedorService,
@@ -59,8 +66,8 @@ export class ProveedorComponent implements OnInit {
   }
 
   hideDialog() {
-    this.proveedor = {...model};
-    this.updateId = ''
+    this.proveedor = { ...model };
+    this.updateId = '';
   }
 
   getProveedores(): void {
@@ -68,6 +75,9 @@ export class ProveedorComponent implements OnInit {
       next: (data) => {
         this.proveedores = data;
         this.dataFiltered = data;
+        this.rubros = data
+          .map((item) => item.rubro)
+          .filter((value, index, self) => self.indexOf(value) === index);
       },
       error: (error) => console.error('Error:', error),
     });
@@ -77,10 +87,11 @@ export class ProveedorComponent implements OnInit {
     this.proveedor.ruc = this.proveedor.ruc == '' ? null : this.proveedor.ruc;
     this.proveedor.empresa = this.proveedor.empresa == '' ? null : this.proveedor.empresa;
     this.proveedor.rubro = this.proveedor.rubro == '' ? null : this.proveedor.rubro;
+    if (this.proveedor.rubro) this.proveedor.rubro = this.capitalize(this.proveedor.rubro);
 
     this.proveedorService.add(this.proveedor).subscribe({
       next: () => {
-        this.showDialog(false)
+        this.showDialog(false);
         this.getProveedores();
       },
       error: (error) => console.error('Error:', error),
@@ -91,10 +102,11 @@ export class ProveedorComponent implements OnInit {
     this.proveedor.ruc = this.proveedor.ruc == '' ? null : this.proveedor.ruc;
     this.proveedor.empresa = this.proveedor.empresa == '' ? null : this.proveedor.empresa;
     this.proveedor.rubro = this.proveedor.rubro == '' ? null : this.proveedor.rubro;
+    if (this.proveedor.rubro) this.proveedor.rubro = this.capitalize(this.proveedor.rubro);
 
-    this.proveedorService.update(this.proveedor,this.updateId).subscribe({
+    this.proveedorService.update(this.proveedor, this.updateId).subscribe({
       next: () => {
-        this.showDialog(false)
+        this.showDialog(false);
         this.getProveedores();
       },
       error: (error) => console.error('Error:', error),
@@ -109,9 +121,26 @@ export class ProveedorComponent implements OnInit {
     );
   }
 
+  filterRubro(event: AutoCompleteCompleteEvent) {
+    let filtered: string[] = [];
+    let query = event.query;
+
+    for (let i = 0; i < this.rubros.length; i++) {
+      let rubro = this.rubros[i];
+      if (rubro.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(rubro);
+      }
+    }
+    this.rubrosFiltered = filtered;
+  }
+
   showUpdateDialog(proveedor: ProveedorEntity) {
     this.updateId = proveedor.id;
-    this.proveedor = {...proveedor };
-    this.showDialog(true)
+    this.proveedor = { ...proveedor };
+    this.showDialog(true);
+  }
+
+  capitalize(string: string) {
+    return string && string[0].toUpperCase() + string.slice(1);
   }
 }

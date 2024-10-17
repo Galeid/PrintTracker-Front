@@ -62,7 +62,9 @@
               <p-button
                 icon="pi pi-arrow-circle-down"
                 label="Gastos"
-                (onClick)="router.navigate(['/proveedores/' + proveedor.id + '/gastos'])"
+                (onClick)="
+                  router.navigate(['/proveedores/' + proveedor.id + '/gastos'])
+                "
               />
             </div>
           </td>
@@ -73,7 +75,7 @@
 </div>
 
 <p-dialog
-  [header]="updateId==''? 'Crear Proveedor' : 'Editar Proveedor'"
+  [header]="updateId == '' ? 'Crear Proveedor' : 'Editar Proveedor'"
   [(visible)]="dialog"
   [modal]="true"
   [style]="{ width: '28rem' }"
@@ -89,13 +91,17 @@
     />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label for="nombre">RUC</label>
-    <input
-      pInputText
-      id="ruc"
-      name="ruc"
-      [(ngModel)]="proveedor.ruc"
+    <label for="rubro">Rubro</label>
+    <p-autoComplete
+      [(ngModel)]="proveedor.rubro"
+      [suggestions]="rubrosFiltered"
+      [showEmptyMessage]="false"
+      (completeMethod)="filterRubro($event)"
     />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label for="nombre">RUC</label>
+    <input pInputText id="ruc" name="ruc" [(ngModel)]="proveedor.ruc" />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label for="empresa">Empresa</label>
@@ -104,15 +110,6 @@
       id="empresa"
       name="empresa"
       [(ngModel)]="proveedor.empresa"
-    />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label for="rubro">Rubro</label>
-    <input
-      pInputText
-      id="rubro"
-      name="rubro"
-      [(ngModel)]="proveedor.rubro"
     />
   </div>
   <div class="flex gap-2 mt-4 justify-end">
