@@ -25,7 +25,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-registro>
       <tr>
-          <td>{{ registro.fecha }}</td>
+          <td>{{ registro.fecha ? formatDate(registro.fecha) : "-" }}</td>
           <td>{{ registro.cuentaInicial }}</td>
           <td>{{ registro.efectivoInicial }}</td>
           <td>{{ registro.pendienteInicial }}</td>
