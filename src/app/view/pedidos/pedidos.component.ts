@@ -21,6 +21,7 @@ import { ClienteEntity } from '../../entities/cliente/cliente.entity';
 import { PedidoEntity } from '../../entities/pedido/pedido.entity';
 import { PedidoModel } from '../../entities/pedido/pedido.model';
 import { TipoPago, TipoPedido } from '../../entities/enums/pedido.enums';
+import { Utils } from '../../utils/utils';
 
 const model: PedidoModel = {
   descripcion: '',
@@ -79,6 +80,8 @@ export class PedidosComponent implements OnInit {
   @Input() clienteId: string | undefined;
   tipoPago: TipoPago = TipoPago.EFECTIVO;
   payId: string = '';
+
+  protected readonly Utils = Utils;
 
   constructor(
     private pedidoService: PedidoService,
@@ -173,25 +176,9 @@ export class PedidosComponent implements OnInit {
   }
 
   hideDialog() {
-    this.pedido = {...model};
+    this.pedido = {...model , fecha: new Date()};
     this.clienteSelected = undefined;
     this.payId=''
     this.tipoPago=TipoPago.EFECTIVO
-  }
-
-  isToday(fecha: Date) {
-    return new Date(fecha).getDate() === new Date().getDate();
-  }
-
-  capitalize(string: string) {
-    return string && string[0].toUpperCase() + string.slice(1);
-  }
-
-  formatDate(dateToFormat: Date): string {
-    const date = new Date(dateToFormat);
-    const dia = date.getDate().toString().padStart(2, '0');
-    const mes = (date.getMonth() + 1).toString().padStart(2, '0');
-    const anio = date.getFullYear().toString().slice(0);
-    return `${dia}/${mes}/${anio}`;
   }
 }

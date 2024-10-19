@@ -17,6 +17,7 @@ import {
 import { ProveedorService } from '../../services/proveedor.service';
 import { ProveedorModel } from '../../entities/proveedor/proveedor.model';
 import { ProveedorEntity } from '../../entities/proveedor/proveedor.entity';
+import { Utils } from '../../utils/utils';
 
 const model: ProveedorModel = {
   nombre: '',
@@ -51,6 +52,8 @@ export class ProveedorComponent implements OnInit {
   updateId: string = '';
   rubrosFiltered: string[] = [];
   rubros: string[] = [];
+
+  protected readonly Utils = Utils;
 
   constructor(
     private proveedorService: ProveedorService,
@@ -87,7 +90,7 @@ export class ProveedorComponent implements OnInit {
     this.proveedor.ruc = this.proveedor.ruc == '' ? null : this.proveedor.ruc;
     this.proveedor.empresa = this.proveedor.empresa == '' ? null : this.proveedor.empresa;
     this.proveedor.rubro = this.proveedor.rubro == '' ? null : this.proveedor.rubro;
-    if (this.proveedor.rubro) this.proveedor.rubro = this.capitalize(this.proveedor.rubro);
+    if (this.proveedor.rubro) this.proveedor.rubro = Utils.capitalize(this.proveedor.rubro);
 
     this.proveedorService.add(this.proveedor).subscribe({
       next: () => {
@@ -102,7 +105,7 @@ export class ProveedorComponent implements OnInit {
     this.proveedor.ruc = this.proveedor.ruc == '' ? null : this.proveedor.ruc;
     this.proveedor.empresa = this.proveedor.empresa == '' ? null : this.proveedor.empresa;
     this.proveedor.rubro = this.proveedor.rubro == '' ? null : this.proveedor.rubro;
-    if (this.proveedor.rubro) this.proveedor.rubro = this.capitalize(this.proveedor.rubro);
+    if (this.proveedor.rubro) this.proveedor.rubro = Utils.capitalize(this.proveedor.rubro);
 
     this.proveedorService.update(this.proveedor, this.updateId).subscribe({
       next: () => {
@@ -138,9 +141,5 @@ export class ProveedorComponent implements OnInit {
     this.updateId = proveedor.id;
     this.proveedor = { ...proveedor };
     this.showDialog(true);
-  }
-
-  capitalize(string: string) {
-    return string && string[0].toUpperCase() + string.slice(1);
   }
 }

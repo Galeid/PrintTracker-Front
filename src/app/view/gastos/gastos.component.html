@@ -24,7 +24,8 @@
 
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
-    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines"
+    selectionMode="single">
       <ng-template pTemplate="header">
         <tr>
           <th>PROVEEDOR</th>
@@ -40,13 +41,13 @@
         <tr>
           <td>{{ gasto.proveedor?.nombre }}</td>
           <td>{{ gasto.descripcion }}</td>
-          <td>{{ capitalize(gasto.proveedor?.rubro) }}</td>
+          <td>{{ Utils.capitalize(gasto.proveedor?.rubro) }}</td>
           <td class="text-center">{{ gasto.monto }}</td>
-          <td class="text-center">{{ formatDate(gasto.fecha) }}</td>
-          <td class="text-center">{{ capitalize(gasto.tipoPago) }}</td>
-          <td>
-            <div class="flex gap-2 justify-evenly">
-              @if (isToday(gasto.fecha)) {
+          <td class="text-center">{{ Utils.formatDate(gasto.fecha) }}</td>
+          <td class="text-center">{{ Utils.capitalize(gasto.tipoPago) }}</td>
+          <td class="text-center" style="padding: 0.25rem !important;">
+            <div class="flex gap-2 justify-evenly text-sm">
+              @if (Utils.isToday(gasto.fecha)) {
               <p-button
                 icon="pi pi-times"
                 label="Anular"

@@ -36,7 +36,8 @@
 
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
-    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines"
+    selectionMode="single">
       <ng-template pTemplate="header">
         <tr>
           <th>NOMBRE</th>
@@ -56,8 +57,8 @@
           <td>{{ cliente.telefono }}</td>
           <td class="text-center">{{ cliente.correo }}</td>
           <td>{{ cliente.direccion }}</td>
-          <td class="text-center">
-            <div class="flex gap-2 justify-evenly">
+          <td class="text-center" style="padding: 0.25rem !important;">
+            <div class="flex gap-2 justify-evenly text-sm">
               <p-button
                 icon="pi pi-pencil"
                 label="Editar"

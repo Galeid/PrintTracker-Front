@@ -21,6 +21,7 @@ import { ProveedorEntity } from '../../entities/proveedor/proveedor.entity';
 import { GastoModel } from '../../entities/gasto/gasto.model';
 import { TipoPago } from '../../entities/enums/pedido.enums';
 import { GastoEntity } from '../../entities/gasto/gasto.entity';
+import { Utils } from '../../utils/utils';
 
 const model: GastoModel = {
   descripcion: '',
@@ -67,6 +68,8 @@ export class GastosComponent implements OnInit {
   proveedoresFiltered: ProveedorEntity[] = [];
   pagoOptions = pagoOptions;
   @Input() proveedorId: string | undefined;
+
+  protected readonly Utils = Utils;
 
   constructor(
     private gastoService: GastoService,
@@ -144,23 +147,7 @@ export class GastosComponent implements OnInit {
   }
 
   hideDialog() {
-    this.gasto = model;
+    this.gasto = {...model , fecha: new Date()};
     this.proveedorSelected = undefined;
-  }
-
-  isToday(fecha: Date) {
-    return new Date(fecha).getDate() === new Date().getDate();
-  }
-
-  capitalize(string: string) {
-    return string && string[0].toUpperCase() + string.slice(1);
-  }
-
-  formatDate(dateToFormat: Date): string {
-    const date = new Date(dateToFormat);
-    const dia = date.getDate().toString().padStart(2, '0');
-    const mes = (date.getMonth() + 1).toString().padStart(2, '0');
-    const anio = date.getFullYear().toString().slice(0);
-    return `${dia}/${mes}/${anio}`;
   }
 }

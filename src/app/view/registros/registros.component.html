@@ -1,38 +1,65 @@
-<button (click)="router.navigate(['/dashboard'])">Regresar</button>
+<div class="flex justify-between mb-4">
+  <div class="flex gap-4 items-center">
+    <p-button
+      label="Regresar"
+      icon="pi pi-angle-double-left text-xl"
+      iconPos="left"
+      severity="secondary"
+      (onClick)="router.navigate(['/dashboard'])"
+    />
+    <div class="text-2xl font-semibold">Registros</div>
+  </div>
 
-<p-table [value]="registros" [tableStyle]="{ 'min-width': '50rem' }">
-  <ng-template pTemplate="header">
-      <tr>
-        <th>Fecha</th>
-        <th>CuentaInicial</th>
-        <th>EfectivoInicial</th>
-        <th>PendienteInicial</th>
-        <th>CuentaFinal</th>
-        <th>EfectivoFinal</th>
-        <th>PendienteFinal</th>
-        <th>IngresosCuenta</th>
-        <th>GastosCuenta</th>
-        <th>IngresosEfectivo</th>
-        <th>GastosEfectivo</th>
-        <th>PendienteHoy</th>
-        <th>nroPedidos</th>
-        <th>nroGastos</th>
-        <th>nroPedidosPendientes</th>
-        <th>nroPasadosPagados</th>
+  <div class="flex gap-4 items-center">
+    <p-button
+      label="Cerrar Caja"
+      icon="pi pi-plus text-xl"
+      iconPos="left"
+      severity="warning"
+    />
+  </div>
+</div>
 
-
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-registro>
-      <tr>
-          <td>{{ registro.fecha ? formatDate(registro.fecha) : "-" }}</td>
+<div class="rounded-lg shadow-md bg-white p-4">
+  <div class="rounded-t-lg overflow-hidden">
+    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines"
+    selectionMode="single">
+      <ng-template pTemplate="header">
+        <tr>
+          <th rowspan="2" class="text-center">FECHA</th>
+          <th colspan="3" class="text-center">INICIAL</th>
+          <th colspan="3" class="text-center">FINAL</th>
+          <th colspan="2" class="text-center">CUENTA</th>
+          <th colspan="2" class="text-center">EFECTIVO</th>
+          <th rowspan="2" class="text-center">PENDIENTE HOY</th>
+          <th colspan="4" class="text-center">CANTIDAD (NRO)</th>
+        </tr>
+        <tr>
+          <th class="text-center">CUENTA</th>
+          <th class="text-center">EFECTIVO</th>
+          <th class="text-center">PENDIENTE</th>
+          <th class="text-center">CUENTA</th>
+          <th class="text-center">EFECTIVO</th>
+          <th class="text-center">PENDIENTE</th>
+          <th class="text-center">INGRESOS</th>
+          <th class="text-center">GASTOS</th>
+          <th class="text-center">INGRESOS</th>
+          <th class="text-center">GASTOS</th>
+          <th class="text-center">PEDIDOS</th>
+          <th class="text-center">GASTOS</th>
+          <th class="text-center">PEDIDOS PENDIENTES</th>
+          <th class="text-center">PASADOS PAGADOS</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-registro>
+        <tr>
+          <td>{{ registro.fecha ? Utils.formatDate(registro.fecha) : "-" }}</td>
           <td>{{ registro.cuentaInicial }}</td>
           <td>{{ registro.efectivoInicial }}</td>
           <td>{{ registro.pendienteInicial }}</td>
           <td>{{ registro.cuentaFinal }}</td>
           <td>{{ registro.efectivoFinal }}</td>
           <td>{{ registro.pendienteFinal }}</td>
-
           <td>{{ registro.ingresosCuentaTotal }}</td>
           <td>{{ registro.gastosCuentaTotal }}</td>
           <td>{{ registro.ingresosEfectivoTotal }}</td>
@@ -42,6 +69,8 @@
           <td>{{ registro.nroGastos }}</td>
           <td>{{ registro.nroPedidosPendientes }}</td>
           <td>{{ registro.nroPasadosPagados }}</td>
-      </tr>
-  </ng-template>
-</p-table>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

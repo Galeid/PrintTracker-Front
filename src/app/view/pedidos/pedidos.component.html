@@ -28,7 +28,12 @@
 
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
-    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table
+      [value]="dataFiltered"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      styleClass="p-datatable-gridlines"
+      selectionMode="single"
+    >
       <ng-template pTemplate="header">
         <tr>
           <th class="text-center">NRO</th>
@@ -49,26 +54,26 @@
           <td class="text-center">#{{ pedido.nroPedido }}</td>
           <td>{{ pedido.cliente?.nombre }}</td>
           <td>{{ pedido.descripcion }}</td>
-          <td>{{ capitalize(pedido.tipo) }}</td>
+          <td>{{ Utils.capitalize(pedido.tipo) }}</td>
           <td class="text-center">{{ pedido.monto }}</td>
-          <td class="text-center">{{ formatDate(pedido.fecha) }}</td>
-          <td class="text-center">{{ capitalize(pedido.estado) }}</td>
-          <td class="text-center">
-            {{ pedido.fechaPago ? capitalize(pedido.tipoPago) : "-" }}
+          <td class="text-center">{{ Utils.formatDate(pedido.fecha) }}</td>
+          <td class="text-center">{{ Utils.capitalize(pedido.estado) }}</td>
+          <td class="text-center">s
+            {{ pedido.fechaPago ? Utils.capitalize(pedido.tipoPago) : "-" }}
           </td>
-          <td class="text-center">{{ capitalize(pedido.estadoPago) }}</td>
+          <td class="text-center">{{ Utils.capitalize(pedido.estadoPago) }}</td>
           <td class="text-center">
-            {{ pedido.fechaPago ? formatDate(pedido.fechaPago) : "-" }}
+            {{ pedido.fechaPago ? Utils.formatDate(pedido.fechaPago) : "-" }}
           </td>
-          <td>
-            <div class="flex gap-2 justify-evenly">
+          <td class="text-center" style="padding: 0.25rem !important;">
+            <div class="flex gap-2 justify-evenly text-sm">
               @if (pedido.estadoPago != "pagado") {
               <p-button
                 icon="pi pi-dollar"
                 label="Pagar"
                 (click)="showPayDialog(true, pedido.id)"
               />
-              } @if (isToday(pedido.fecha)) {
+              } @if (Utils.isToday(pedido.fecha)) {
               <p-button
                 icon="pi pi-times"
                 label="Anular"
