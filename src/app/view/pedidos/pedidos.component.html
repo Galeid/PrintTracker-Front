@@ -58,14 +58,14 @@
           <td class="text-center">{{ pedido.monto }}</td>
           <td class="text-center">{{ Utils.formatDate(pedido.fecha) }}</td>
           <td class="text-center">{{ Utils.capitalize(pedido.estado) }}</td>
-          <td class="text-center">s
+          <td class="text-center">
             {{ pedido.fechaPago ? Utils.capitalize(pedido.tipoPago) : "-" }}
           </td>
           <td class="text-center">{{ Utils.capitalize(pedido.estadoPago) }}</td>
           <td class="text-center">
             {{ pedido.fechaPago ? Utils.formatDate(pedido.fechaPago) : "-" }}
           </td>
-          <td class="text-center" style="padding: 0.25rem !important;">
+          <td class="text-center" style="padding: 0.25rem !important">
             <div class="flex gap-2 justify-evenly text-sm">
               @if (pedido.estadoPago != "pagado") {
               <p-button
