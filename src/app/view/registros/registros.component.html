@@ -12,6 +12,13 @@
 
   <div class="flex gap-4 items-center">
     <p-button
+      label="Exportar"
+      icon="pi pi-cloud-download text-xl"
+      iconPos="left"
+      severity="warning"
+      (onClick)="exportExcel()"
+    />
+    <p-button
       label="Cerrar Caja"
       icon="pi pi-plus text-xl"
       iconPos="left"

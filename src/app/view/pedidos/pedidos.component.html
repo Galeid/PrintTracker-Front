@@ -17,6 +17,13 @@
   </div>
   <div class="flex gap-4 items-center">
     <p-button
+      label="Exportar"
+      icon="pi pi-cloud-download text-xl"
+      iconPos="left"
+      severity="warning"
+      (onClick)="exportExcel()"
+    />
+    <p-button
       label="Crear"
       icon="pi pi-plus text-xl"
       iconPos="left"
@@ -29,6 +36,7 @@
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
     <p-table
+      #table
       [value]="dataFiltered"
       [tableStyle]="{ 'min-width': '50rem' }"
       styleClass="p-datatable-gridlines"

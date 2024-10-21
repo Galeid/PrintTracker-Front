@@ -1,3 +1,5 @@
+import * as FileSaver from 'file-saver';
+
 export class Utils {
   static formatDate(dateToFormat: Date): string {
     const date = new Date(dateToFormat);
@@ -13,5 +15,33 @@ export class Utils {
 
   static isToday(fecha: Date) {
     return new Date(fecha).getDate() === new Date().getDate();
+  }
+
+  static exportExcel(dataToExport: any[], name: string) {
+    import('xlsx').then((xlsx) => {
+      const worksheet = xlsx.utils.json_to_sheet(dataToExport);
+      const workbook = {
+        Sheets: { data: worksheet },
+        SheetNames: ['data'],
+      };
+      const excelBuffer: any = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
+      this.saveAsExcelFile(excelBuffer, name);
+    });
+  }
+
+  static saveAsExcelFile(buffer: any, fileName: string): void {
+    let EXCEL_TYPE =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE,
+    });
+    FileSaver.saveAs(
+      data,
+      fileName + '_' + new Date().getTime() + EXCEL_EXTENSION
+    );
   }
 }

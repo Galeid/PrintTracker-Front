@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -80,6 +80,7 @@ export class PedidosComponent implements OnInit {
   @Input() clienteId: string | undefined;
   tipoPago: TipoPago = TipoPago.EFECTIVO;
   payId: string = '';
+  @ViewChild('table')table !:ElementRef
 
   protected readonly Utils = Utils;
 
@@ -181,4 +182,22 @@ export class PedidosComponent implements OnInit {
     this.payId=''
     this.tipoPago=TipoPago.EFECTIVO
   }
+
+  exportExcel() {
+    const dataToExport = this.dataFiltered.map(item => {
+      return {
+        'NRO': '#'+ item.nroPedido,
+        'CLIENTE': item.cliente.nombre,
+        'DESCRIPCION': item.descripcion,
+        'SERVICIO': Utils.capitalize(item.tipo),
+        'MONTO': item.monto,
+        'FECHA CREACION': Utils.formatDate(item.fecha),
+        'ESTADO': Utils.capitalize(item.estado),
+        'TIPO PAGO': item.fechaPago ? Utils.capitalize(item.tipoPago):'-',
+        'ESTADO PAGO': Utils.capitalize(item.estadoPago),
+        'FECHA PAGO': item.fechaPago ? Utils.formatDate(item.fechaPago):'-',
+      }
+    })
+    Utils.exportExcel(dataToExport, 'Pedido_Reporte')
+}
 }

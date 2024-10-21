@@ -15,7 +15,7 @@ import { Utils } from '../../utils/utils';
 })
 export class RegistrosComponent implements OnInit {
   registros: RegistroEntity[] = [];
-  dataFiltered:RegistroEntity[] = [];
+  dataFiltered: RegistroEntity[] = [];
 
   protected readonly Utils = Utils;
 
@@ -33,5 +33,30 @@ export class RegistrosComponent implements OnInit {
       },
       error: (error) => console.error('Error:', error),
     });
+  }
+
+  exportExcel() {
+    const dataToExport = this.dataFiltered.map((item) => {
+      return {
+        FECHA: Utils.formatDate(item.fecha),
+        'CUENTA INICIAL': item.cuentaInicial,
+        'CUENTA FINAL': item.cuentaFinal,
+        'EFECTIVO INICIAL': item.efectivoInicial,
+        'EFECTIVO FINAL': item.efectivoFinal,
+        'PENDIENTE INICIAL': item.pendienteInicial,
+        'PENDIENTE FINAL': item.pendienteFinal,
+        'INGRESOS CUENTA TOTAL': item.ingresosCuentaTotal,
+        'INGRESOS EFECTIVO TOTAL': item.ingresosEfectivoTotal,
+        'GASTOS CUENTA TOTAL': item.gastosCuentaTotal,
+        'GASTOS EFECTIVO TOTAL': item.gastosEfectivoTotal,
+        'PENDIENTES HOY': item.pendientesHoy,
+        'PASADOS PAGADOS': item.pasadosPagados,
+        'NRO PEDIDOS': item.nroPedidos,
+        'NRO GASTOS': item.nroGastos,
+        'NRO PEDIDOS PENDIENTES': item.nroPedidosPendientes,
+        'NRO PASADOS PAGADOS': item.nroPasadosPagados,
+      };
+    });
+    Utils.exportExcel(dataToExport, 'Registro_Reporte');
   }
 }
