@@ -33,6 +33,45 @@
   </div>
 </div>
 
+<div class="flex mb-4 gap-4 items-center">
+  <label class="font-bold">Filtrar por Fecha:</label>
+  <p-calendar
+    [(ngModel)]="filterStartDate"
+    dateFormat="dd/mm/yy"
+    (onSelect)="filterAll()"
+    placeholder="Fecha Inicio"
+    styleClass="w-32"
+  />
+  <label class="font-bold">-</label>
+  <p-calendar
+    [(ngModel)]="filterEndDate"
+    dateFormat="dd/mm/yy"
+    (onSelect)="filterAll()"
+    placeholder="Fecha Fin"
+    styleClass="w-32"
+  />
+  <label class="font-bold">Filtrar por Servicio:</label>
+  <p-multiSelect
+    [options]="tipoOptions"
+    [(ngModel)]="filterServicios"
+    showClear="true"
+    showHeader="false"
+    optionLabel="label"
+    [maxSelectedLabels]="2"
+    selectedItemsLabel="{0} servicios filtrados"
+    placeholder="Servicios"
+    styleClass="w-64"
+    (onChange)="filterAll()"
+    (onClear)="filterAll()"
+  />
+  <p-button
+    label="Limpiar"
+    icon="pi pi-history text-xl"
+    iconPos="left"
+    (onClick)="cleanFilters()"
+  />
+</div>
+
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
     <p-table
@@ -41,12 +80,61 @@
       [tableStyle]="{ 'min-width': '50rem' }"
       styleClass="p-datatable-gridlines"
       selectionMode="single"
+      (onFilter)="onFilter($event)"
     >
       <ng-template pTemplate="header">
         <tr>
-          <th class="text-center">NRO</th>
-          <th>CLIENTE</th>
-          <th>DESCRIPCION</th>
+          <th class="">
+            <div class="flex items-center justify-center">
+              NRO
+              <p-columnFilter
+                type="text"
+                field="nroPedido"
+                display="menu"
+                matchMode="contains"
+                showMatchModes="false"
+                showOperator="false"
+                showAddButton="false"
+                hideOnClear="true"
+                showButtons="false"
+                placeholder="Filtrar Nro Pedido"
+              />
+            </div>
+          </th>
+          <th>
+            <div class="flex items-center justify-center">
+              CLIENTE
+              <p-columnFilter
+                type="text"
+                field="cliente.nombre"
+                display="menu"
+                matchMode="contains"
+                showMatchModes="false"
+                showOperator="false"
+                showAddButton="false"
+                hideOnClear="true"
+                showButtons="false"
+                placeholder="Filtrar Cliente"
+              />
+            </div>
+          </th>
+          <th>
+            <div class="flex items-center justify-center">
+              DESCRIPCION
+              <p-columnFilter
+                type="text"
+                field="descripcion"
+                display="menu"
+                matchMode="contains"
+                showMatchModes="false"
+                showOperator="false"
+                showAddButton="false"
+                hideOnClear="true"
+                showButtons="false"
+                placeholder="Filtrar Descripcion"
+              />
+            </div>
+          </th>
           <th>SERVICIO</th>
           <th class="text-center">MONTO</th>
           <th class="text-center">CREADO EL</th>

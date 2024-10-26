@@ -59,7 +59,7 @@ const pagoOptions = [
   styleUrl: './gastos.component.css',
 })
 export class GastosComponent implements OnInit {
-  gasto: GastoModel = {...model};
+  gasto: GastoModel = { ...model };
   gastos: GastoEntity[] = [];
   dialog: boolean = false;
   dataFiltered: GastoEntity[] = [];
@@ -68,6 +68,9 @@ export class GastosComponent implements OnInit {
   proveedoresFiltered: ProveedorEntity[] = [];
   pagoOptions = pagoOptions;
   @Input() proveedorId: string | undefined;
+
+  filterStartDate: Date | undefined;
+  filterEndDate: Date | undefined;
 
   protected readonly Utils = Utils;
 
@@ -138,7 +141,7 @@ export class GastosComponent implements OnInit {
     this.proveedoresFiltered = filtered;
   }
 
-  getProveedorById(id:string): ProveedorEntity | undefined {
+  getProveedorById(id: string): ProveedorEntity | undefined {
     return this.proveedores.find((proveedor) => proveedor.id === id);
   }
 
@@ -147,7 +150,48 @@ export class GastosComponent implements OnInit {
   }
 
   hideDialog() {
-    this.gasto = {...model , fecha: new Date()};
+    this.gasto = { ...model, fecha: new Date() };
     this.proveedorSelected = undefined;
+  }
+
+  exportExcel() {
+    const dataToExport = this.dataFiltered.map((item) => {
+      return {
+        PROVEEDOR: item.proveedor.nombre,
+        DESCRIPCION: item.descripcion,
+        RUBRO: item.proveedor.rubro
+          ? Utils.capitalize(item.proveedor.rubro)
+          : '-',
+        MONTO: item.monto,
+        'FECHA CREACION': Utils.formatDate(item.fecha),
+        'TIPO PAGO': item.tipoPago ? Utils.capitalize(item.tipoPago) : '-',
+      };
+    });
+    Utils.exportExcel(dataToExport, 'Gasto_Reporte');
+  }
+
+  filterDate() {
+    if (!this.filterStartDate || !this.filterEndDate) return;
+    if (this.filterStartDate < this.filterEndDate) {
+      this.dataFiltered = this.gastos.filter(
+        (item) =>
+          this.filterStartDate &&
+          this.filterEndDate &&
+          new Date(item.fecha) >= this.filterStartDate &&
+          new Date(item.fecha) <= this.filterEndDate
+      );
+    } else if (Utils.sameDate(this.filterStartDate, this.filterEndDate)) {
+      this.dataFiltered = this.gastos.filter(
+        (item) =>
+          this.filterStartDate &&
+          Utils.sameDate(new Date(item.fecha), this.filterStartDate)
+      );
+    }
+  }
+
+  cleanFilterDate() {
+    this.filterStartDate = undefined;
+    this.filterEndDate = undefined;
+    this.dataFiltered = [...this.gastos];
   }
 }

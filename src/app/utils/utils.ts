@@ -9,6 +9,14 @@ export class Utils {
     return `${dia}/${mes}/${anio}`;
   }
 
+  static sameDate(date1: Date, date2: Date): boolean {
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    );
+  }
+
   static capitalize(string: string) {
     return string && string[0].toUpperCase() + string.slice(1);
   }

@@ -56,7 +56,7 @@ img, video, svg {
   }
 }
 
-.p-inputtext, .p-button {
+.p-inputtext, .p-button, .p-multiselect-label {
   padding: 0.5rem
 }
 
@@ -114,4 +114,8 @@ td .p-button {
 
 .p-datepicker .p-datepicker-header {
   padding: 0;
+}
+
+.p-column-filter-constraints .p-column-filter-constraint {
+  padding: 1rem;
 }
