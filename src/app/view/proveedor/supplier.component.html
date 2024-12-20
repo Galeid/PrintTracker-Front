@@ -7,7 +7,7 @@
       severity="secondary"
       (onClick)="router.navigate(['/dashboard'])"
     />
-    <div class="text-2xl font-semibold">Clientes</div>
+    <div class="text-2xl font-semibold">Proveedores</div>
   </div>
 
   <div class="flex gap-4 items-center">
@@ -36,38 +36,40 @@
 
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
-    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines"
-    selectionMode="single">
+    <p-table
+      [value]="dataFilter"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      styleClass="p-datatable-gridlines"
+      selectionMode="single"
+    >
       <ng-template pTemplate="header">
         <tr>
           <th>NOMBRE</th>
-          <th>RUC</th>
           <th>EMPRESA</th>
-          <th>TELEFONO</th>
-          <th class="text-center">CORREO</th>
-          <th>DIRECCION</th>
+          <th>RUC</th>
+          <th>RUBRO</th>
           <th class="text-center">ACCIONES</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-cliente>
+      <ng-template pTemplate="body" let-supplier>
         <tr>
-          <td>{{ cliente.nombre }}</td>
-          <td>{{ cliente.ruc }}</td>
-          <td>{{ cliente.empresa }}</td>
-          <td>{{ cliente.telefono }}</td>
-          <td class="text-center">{{ cliente.correo }}</td>
-          <td>{{ cliente.direccion }}</td>
-          <td class="text-center" style="padding: 0.25rem !important;">
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.company || '-' }}</td>
+          <td>{{ supplier.ruc || '-' }}</td>
+          <td>{{ supplier.category || '-' }}</td>
+          <td class="text-center" style="padding: 0.25rem !important">
             <div class="flex gap-2 justify-evenly text-sm">
               <p-button
                 icon="pi pi-pencil"
                 label="Editar"
-                (onClick)="showUpdateDialog(cliente)"
+                (onClick)="showUpdateDialog(supplier)"
               />
               <p-button
-                icon="pi pi-shopping-bag"
-                label="Pedidos"
-                (onClick)="router.navigate(['/clientes/'+cliente.id+'/pedidos'])"
+                icon="pi pi-arrow-circle-down"
+                label="Gastos"
+                (onClick)="
+                  router.navigate(['/proveedores/' + supplier.id + '/gastos'])
+                "
               />
             </div>
           </td>
@@ -78,7 +80,7 @@
 </div>
 
 <p-dialog
-  [header]="updateId==''? 'Crear Cliente' : 'Editar Cliente'"
+  [header]="updateId == '' ? 'Crear Proveedor' : 'Editar Proveedor'"
   [(visible)]="dialog"
   [modal]="true"
   [style]="{ width: '28rem' }"
@@ -86,58 +88,29 @@
 >
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Nombre *</label>
-    <input
-      pInputText
-      id="nombre"
-      name="nombre"
-      [(ngModel)]="cliente.nombre"
-    />
+    <input pInputText [(ngModel)]="supplier.name" />
   </div>
+
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Empresa *</label>
-    <input
-      pInputText
-      id="empresa"
-      name="empresa"
-      [(ngModel)]="cliente.empresa"
+    <label>Rubro</label>
+    <p-autoComplete
+      [(ngModel)]="supplier.category"
+      [suggestions]="categoryFilter"
+      [showEmptyMessage]="false"
+      (completeMethod)="filterCategory($event)"
     />
   </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Telefono *</label>
-    <input
-      pInputText
-      id="telefono"
-      name="telefono"
-      [(ngModel)]="cliente.telefono"
-    />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Correo</label>
-    <input
-      pInputText
-      id="correo"
-      name="correo"
-      [(ngModel)]="cliente.correo"
-    />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Dirreccion</label>
-    <input
-      pInputText
-      id="direccion"
-      name="direccion"
-      [(ngModel)]="cliente.direccion"
-    />
-  </div>
+
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>RUC</label>
-    <input
-      pInputText
-      id="ruc"
-      name="ruc"
-      [(ngModel)]="cliente.ruc"
-    />
+    <input pInputText [(ngModel)]="supplier.ruc" />
   </div>
+
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label>Empresa</label>
+    <input pInputText [(ngModel)]="supplier.company" />
+  </div>
+
   <div class="flex gap-2 mt-4 justify-end">
     <p-button
       label="Cancelar"
@@ -148,7 +121,7 @@
     />
     <p-button
       label="Guardar"
-      (onClick)="updateId === '' ? addCliente() : updateCliente()"
+      (onClick)="updateId === '' ? addSupplier() : updateSupplier()"
       icon="pi pi-save text-lg"
       iconPos="left"
     />

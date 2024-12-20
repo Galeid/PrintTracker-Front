@@ -8,7 +8,7 @@
       (onClick)="proveedorId ? router.navigate(['/proveedores']) : router.navigate(['/dashboard'])"
     />
     <div class="text-2xl font-semibold">
-      Gastos @if (proveedorId) { en {{getProveedorById(proveedorId)?.empresa}}}
+      Gastos @if (proveedorId) { en {{getProveedorById(proveedorId)?.company}}}
     </div>
   </div>
   <div class="flex gap-4 items-center">

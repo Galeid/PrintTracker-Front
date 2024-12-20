@@ -1,26 +1,9 @@
-
-<div class="border-t-4 text-right">
-  <button (click)="showDialog()">Cerrar Caja PELIGROOOOO</button>
-</div>
 <div class="border-t-4">
-  Cuenta: {{caja?.cuenta}}
+  Cuenta: {{cash?.main}}
 </div>
 <div>
-  Efectivo: {{caja?.efectivo}}
+  Efectivo: {{cash?.secondary}}
 </div>
 <div>
-  Pendiente: {{caja?.pendiente}}
+  Pendiente: {{cash?.pending}}
 </div>
-<p-dialog header="Cerrar Caja" [(visible)]="displayDialog" [modal]="true" [style]="{ width: '50rem', height: '100%' }">
-  <div class="flex flex-column gap-2 mt-2">
-    <label>Fecha*</label>
-    <p-calendar
-      [(ngModel)]="fechaCerraCaja"
-      dateFormat="dd/mm/yy"
-      />
-  </div>
-  <div class="flex justify-content-end gap-2">
-    <p-button label="Cancel" severity="secondary" (onClick)="displayDialog = false" />
-    <p-button label="Save" (onClick)="cerrarCaja()" />
-</div>
-</p-dialog>

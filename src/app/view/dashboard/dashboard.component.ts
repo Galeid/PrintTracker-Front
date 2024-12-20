@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CajaService } from '../../services/caja.service';
+
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModule } from 'primeng/dialog';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+
+import { CashEntity } from '../../entities/cash/cash.entity';
+import { CashService } from '../../services/caja.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,37 +17,21 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-  caja: any;
-  displayDialog: boolean = false;
-  fechaCerraCaja: Date = new Date();
+  cash: CashEntity | undefined;
+
   constructor(
     public router: Router,
-    private readonly cajaService: CajaService
+    private readonly cashService: CashService
   ) {}
+
   ngOnInit(): void {
-    this.cajaService.getCaja().subscribe({
-      next: (caja) => (this.caja = caja),
+    this.getCash();
+  }
+
+  getCash(): void {
+    this.cashService.getByBranch().subscribe({
+      next: (cash) => (this.cash = cash),
       error: (error) => console.error('Error:', error),
     });
-  }
-  cerrarCaja(): void {
-    this.cajaService
-      .cerrarCaja({
-        fecha: this.fechaCerraCaja,
-        idUsuario: localStorage.getItem('idUsuario'),
-      })
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            console.log('Cerrado con éxito');
-            console.log(response);
-            this.displayDialog = false;
-          }
-        },
-        error: (error) => console.error('Error:', error),
-      });
-  }
-  showDialog() {
-    this.displayDialog = true;
   }
 }

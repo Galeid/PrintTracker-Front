@@ -16,8 +16,8 @@ import {
 } from 'primeng/autocomplete';
 
 import { GastoService } from '../../services/gasto.service';
-import { ProveedorService } from '../../services/proveedor.service';
-import { ProveedorEntity } from '../../entities/proveedor/proveedor.entity';
+import { SupplierService } from '../../services/proveedor.service';
+import { SupplierEntity } from '../../entities/proveedor/supplier.entity';
 import { GastoModel } from '../../entities/gasto/gasto.model';
 import { TipoPago } from '../../entities/enums/pedido.enums';
 import { GastoEntity } from '../../entities/gasto/gasto.entity';
@@ -63,9 +63,9 @@ export class GastosComponent implements OnInit {
   gastos: GastoEntity[] = [];
   dialog: boolean = false;
   dataFiltered: GastoEntity[] = [];
-  proveedorSelected: ProveedorEntity | undefined;
-  proveedores: ProveedorEntity[] = [];
-  proveedoresFiltered: ProveedorEntity[] = [];
+  proveedorSelected: SupplierEntity | undefined;
+  proveedores: SupplierEntity[] = [];
+  proveedoresFiltered: SupplierEntity[] = [];
   pagoOptions = pagoOptions;
   @Input() proveedorId: string | undefined;
 
@@ -76,7 +76,7 @@ export class GastosComponent implements OnInit {
 
   constructor(
     private gastoService: GastoService,
-    private proveedorService: ProveedorService,
+    private proveedorService: SupplierService,
     public router: Router
   ) {}
 
@@ -129,19 +129,19 @@ export class GastosComponent implements OnInit {
   cancelGasto(pedido: any) {}
 
   filterProveedor(event: AutoCompleteCompleteEvent) {
-    let filtered: ProveedorEntity[] = [];
+    let filtered: SupplierEntity[] = [];
     let query = event.query;
 
     for (let i = 0; i < this.proveedores.length; i++) {
       let proveedor = this.proveedores[i];
-      if (proveedor.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (proveedor.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(proveedor);
       }
     }
     this.proveedoresFiltered = filtered;
   }
 
-  getProveedorById(id: string): ProveedorEntity | undefined {
+  getProveedorById(id: string): SupplierEntity | undefined {
     return this.proveedores.find((proveedor) => proveedor.id === id);
   }
 
@@ -157,10 +157,10 @@ export class GastosComponent implements OnInit {
   exportExcel() {
     const dataToExport = this.dataFiltered.map((item) => {
       return {
-        PROVEEDOR: item.proveedor.nombre,
+        PROVEEDOR: item.proveedor.name,
         DESCRIPCION: item.descripcion,
-        RUBRO: item.proveedor.rubro
-          ? Utils.capitalize(item.proveedor.rubro)
+        RUBRO: item.proveedor.category
+          ? Utils.capitalize(item.proveedor.category)
           : '-',
         MONTO: item.monto,
         'FECHA CREACION': Utils.formatDate(item.fecha),

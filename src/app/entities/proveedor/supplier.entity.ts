@@ -1,11 +1,9 @@
-export interface ClientEntity {
+export interface SupplierEntity {
   id: string;
   name: string;
   ruc: string;
   company: string;
-  phone: string;
-  email: string;
-  addres: string;
+  category: string;
   status: boolean;
   created_at: Date;
   updated_at: Date;

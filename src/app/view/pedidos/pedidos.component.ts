@@ -15,13 +15,18 @@ import {
   AutoCompleteModule,
 } from 'primeng/autocomplete';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { TagModule } from 'primeng/tag';
 
 import { PedidoService } from '../../services/pedido.service';
-import { ClienteService } from '../../services/cliente.service';
-import { ClienteEntity } from '../../entities/cliente/cliente.entity';
+import { ClientService } from '../../services/cliente.service';
+import { ClientEntity } from '../../entities/cliente/cliente.entity';
 import { PedidoEntity } from '../../entities/pedido/pedido.entity';
 import { PedidoModel } from '../../entities/pedido/pedido.model';
-import { TipoPago, TipoPedido } from '../../entities/enums/pedido.enums';
+import {
+  EstadoPedido,
+  TipoPago,
+  TipoPedido,
+} from '../../entities/enums/pedido.enums';
 import { Utils } from '../../utils/utils';
 
 const model: PedidoModel = {
@@ -58,6 +63,7 @@ const pagoOptions = [
     DialogModule,
     CommonModule,
     FormsModule,
+    TagModule,
     ButtonModule,
     InputNumberModule,
     MultiSelectModule,
@@ -75,9 +81,9 @@ export class PedidosComponent implements OnInit {
   payDialog: boolean = false;
   dataFiltered: PedidoEntity[] = [];
   tableFiltered: PedidoEntity[] = [];
-  clienteSelected: ClienteEntity | undefined;
-  clientes: ClienteEntity[] = [];
-  clientesFiltered: ClienteEntity[] = [];
+  clienteSelected: ClientEntity | undefined;
+  clientes: ClientEntity[] = [];
+  clientesFiltered: ClientEntity[] = [];
   tipoOptions = tipoOptions;
   pagoOptions = pagoOptions;
   @Input() clienteId: string | undefined;
@@ -94,7 +100,7 @@ export class PedidosComponent implements OnInit {
 
   constructor(
     private pedidoService: PedidoService,
-    private clienteService: ClienteService,
+    private clienteService: ClientService,
     public router: Router
   ) {}
 
@@ -146,7 +152,7 @@ export class PedidosComponent implements OnInit {
   }
 
   payPedido(id: string) {
-    this.pedidoService.pay(id, this.tipoPago).subscribe({
+    this.pedidoService.pay(id).subscribe({
       next: () => {
         console.log('Pedido pagado correctamente');
         this.getPedidos();
@@ -156,22 +162,30 @@ export class PedidosComponent implements OnInit {
     });
   }
 
-  cancelPedido(pedido: any) {}
+  cancelPedido(id: string) {
+    this.pedidoService.cancel(id).subscribe({
+      next: () => {
+        console.log('Pedido cancelado correctamente');
+        this.getPedidos();
+      },
+      error: (error) => console.error('Error:', error),
+    });
+  }
 
   filterCliente(event: AutoCompleteCompleteEvent) {
-    let filtered: ClienteEntity[] = [];
+    let filtered: ClientEntity[] = [];
     let query = event.query;
 
     for (let i = 0; i < this.clientes.length; i++) {
       let cliente = this.clientes[i];
-      if (cliente.nombre.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+      if (cliente.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
         filtered.push(cliente);
       }
     }
     this.clientesFiltered = filtered;
   }
 
-  getClienteById(id: string): ClienteEntity | undefined {
+  getClienteById(id: string): ClientEntity | undefined {
     return this.clientes.find((cliente) => cliente.id === id);
   }
 
@@ -195,13 +209,11 @@ export class PedidosComponent implements OnInit {
     const dataToExport = this.tableFiltered.map((item) => {
       return {
         NRO: '#' + item.nroPedido,
-        CLIENTE: item.cliente.nombre,
+        CLIENTE: item.cliente.name,
         DESCRIPCION: item.descripcion,
         SERVICIO: Utils.capitalize(item.tipo),
         MONTO: item.monto,
         'FECHA CREACION': Utils.formatDate(item.fecha),
-        ESTADO: Utils.capitalize(item.estado),
-        'TIPO PAGO': item.fechaPago ? Utils.capitalize(item.tipoPago) : '-',
         'ESTADO PAGO': Utils.capitalize(item.estadoPago),
         'FECHA PAGO': item.fechaPago ? Utils.formatDate(item.fechaPago) : '-',
       };
@@ -232,19 +244,17 @@ export class PedidosComponent implements OnInit {
       );
       this.tableFiltered = [...this.dataFiltered];
     } else {
-      return false
+      return false;
     }
-    return true
+    return true;
   }
 
-  filterServicio(data: PedidoEntity[]){
+  filterServicio(data: PedidoEntity[]) {
     if (this.filterServicios && this.filterServicios.length > 0) {
       const valuesSet = new Set(
         this.filterServicios.map((item) => String(item.value))
       );
-      this.dataFiltered = data.filter((item) =>
-        valuesSet.has(item.tipo)
-      );
+      this.dataFiltered = data.filter((item) => valuesSet.has(item.tipo));
       this.tableFiltered = [...this.dataFiltered];
     } else {
       this.dataFiltered = [...data];
@@ -253,17 +263,17 @@ export class PedidosComponent implements OnInit {
   }
 
   filterAll() {
-    let isFilterDate = this.filterDate()
-    if (this.filterServicios == null ) {
-      if(isFilterDate) {
-        return
+    let isFilterDate = this.filterDate();
+    if (this.filterServicios == null) {
+      if (isFilterDate) {
+        return;
       } else {
         this.dataFiltered = [...this.pedidos];
         this.tableFiltered = [...this.pedidos];
-        return
+        return;
       }
     }
-    this.filterServicio(isFilterDate ? this.dataFiltered : this.pedidos)
+    this.filterServicio(isFilterDate ? this.dataFiltered : this.pedidos);
   }
 
   cleanFilters() {
@@ -272,5 +282,20 @@ export class PedidosComponent implements OnInit {
     this.filterServicios = null;
     this.dataFiltered = [...this.pedidos];
     this.tableFiltered = [...this.pedidos];
+  }
+
+  getTagEstado(estado: EstadoPedido): "success" | "info" | "warning" | "danger" | "secondary" | "contrast" | undefined {
+    switch (estado) {
+      case EstadoPedido.COMPLETADO:
+        return 'success';
+      case EstadoPedido.ANULADO:
+        return 'danger';
+      case EstadoPedido.PENDIENTE:
+        return 'warning';
+      case EstadoPedido.PROCESO:
+        return 'info';
+      default:
+        return undefined
+    }
   }
 }

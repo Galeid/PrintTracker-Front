@@ -1,8 +1,8 @@
-export interface ClienteModel {
-  nombre: string;
+export interface ClientModel {
+  name: string;
+  company: string;
   ruc?: string | null;
-  empresa: string;
-  telefono: string;
-  correo?: string | null;
-  direccion?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  address?: string | null;
 }

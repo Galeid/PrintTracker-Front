@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { ButtonModule } from 'primeng/button';
 
 @Component({
@@ -9,11 +10,20 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css',
 })
-export class HeaderLayoutComponent {
+export class HeaderLayoutComponent implements OnInit {
+  branch: string = ''
+
   constructor(public router: Router) {}
-  logOut() {
-    localStorage.removeItem('idCaja');
-    localStorage.removeItem('idUsuario');
+
+  ngOnInit(): void {
+    this.branch = localStorage.getItem('branch') || ''
+  }
+
+  logOut(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('branch');
+    localStorage.removeItem('role');
+
     this.router.navigate(['/']);
   }
 }

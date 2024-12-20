@@ -1,8 +1,6 @@
-import { ClienteEntity } from '../cliente/cliente.entity';
+import { ClientEntity } from '../cliente/cliente.entity';
 import {
   EstadoPago,
-  EstadoPedido,
-  TipoPago,
   TipoPedido,
 } from '../enums/pedido.enums';
 
@@ -12,12 +10,10 @@ export interface PedidoEntity {
   monto: number;
   nroPedido: number;
   tipo: TipoPedido;
-  tipoPago: TipoPago;
   fecha: Date;
   fechaPago: Date;
-  estado: EstadoPedido;
   estadoPago: EstadoPago;
-  cliente: Partial<ClienteEntity>;
+  cliente: Partial<ClientEntity>;
   created_at: Date;
   updated_at: Date;
 }

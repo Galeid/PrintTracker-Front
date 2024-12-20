@@ -18,7 +18,8 @@ export class Utils {
   }
 
   static capitalize(string: string) {
-    return string && string[0].toUpperCase() + string.slice(1);
+    let toCapitalize = string.toLowerCase();
+    return toCapitalize && toCapitalize[0].toUpperCase() + toCapitalize.slice(1);
   }
 
   static isToday(fecha: Date) {

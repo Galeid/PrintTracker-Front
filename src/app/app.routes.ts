@@ -1,11 +1,12 @@
+import { inject } from '@angular/core';
 import { Router, Routes } from '@angular/router';
+
 import { LoginComponent } from './view/login/login.component';
-import { ClienteComponent } from './view/cliente/cliente.component';
+import { ClientComponent } from './view/cliente/client.component';
 import { DashboardComponent } from './view/dashboard/dashboard.component';
-import { ProveedorComponent } from './view/proveedor/proveedor.component';
+import { SupplierComponent } from './view/proveedor/supplier.component';
 import { PedidosComponent } from './view/pedidos/pedidos.component';
 import { GastosComponent } from './view/gastos/gastos.component';
-import { inject } from '@angular/core';
 import { MainLayoutComponent } from './layouts/main/main.component';
 import { RegistrosComponent } from './view/registros/registros.component';
 
@@ -20,7 +21,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'clientes',
-        component: ClienteComponent,
+        component: ClientComponent,
         canActivate: [redirectLogin],
       },
       {
@@ -30,7 +31,7 @@ export const routes: Routes = [
       },
       {
         path: 'proveedores',
-        component: ProveedorComponent,
+        component: SupplierComponent,
         canActivate: [redirectLogin],
       },
       {
@@ -57,14 +58,14 @@ export const routes: Routes = [
         path: 'registros',
         component: RegistrosComponent,
         canActivate: [redirectLogin],
-      }
+      },
     ],
   },
 ];
 
-function redirectLogin() {
+function redirectLogin(): boolean {
   const router = inject(Router);
-  if (localStorage.getItem('idUsuario')) {
+  if (localStorage.getItem('token')) {
     return true;
   } else {
     router.navigate(['/']);

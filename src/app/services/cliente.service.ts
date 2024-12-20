@@ -2,37 +2,40 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ClienteEntity } from '../entities/cliente/cliente.entity';
-import { ClienteModel } from '../entities/cliente/cliente.model';
+import { ClientEntity } from '../entities/cliente/cliente.entity';
+import { ClientModel } from '../entities/cliente/cliente.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ClienteService {
+export class ClientService {
   url = 'http://localhost:3000';
-  headers = {
-    headers: { Accept: 'application/json' },
+  options = {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
   };
 
   constructor(private http: HttpClient) {}
 
-  get(): Observable<ClienteEntity[]> {
-    return this.http.get<ClienteEntity[]>(this.url + '/clientes', this.headers);
+  get(): Observable<ClientEntity[]> {
+    return this.http.get<ClientEntity[]>(this.url + '/clients', this.options);
   }
 
-  add(model: ClienteModel): Observable<ClienteEntity> {
-    return this.http.post<ClienteEntity>(
-      this.url + '/clientes',
+  add(model: ClientModel): Observable<ClientEntity> {
+    return this.http.post<ClientEntity>(
+      this.url + '/clients',
       model,
-      this.headers
+      this.options
     );
   }
 
-  update(model: ClienteModel, id: string): Observable<ClienteEntity> {
-    return this.http.patch<ClienteEntity>(
-      this.url + '/clientes/' + id,
+  update(model: ClientModel, id: string): Observable<ClientEntity> {
+    return this.http.patch<ClientEntity>(
+      this.url + '/clients/' + id,
       model,
-      this.headers
+      this.options
     );
   }
 }

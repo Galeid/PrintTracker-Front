@@ -7,7 +7,7 @@
       severity="secondary"
       (onClick)="router.navigate(['/dashboard'])"
     />
-    <div class="text-2xl font-semibold">Proveedores</div>
+    <div class="text-2xl font-semibold">Clientes</div>
   </div>
 
   <div class="flex gap-4 items-center">
@@ -36,35 +36,43 @@
 
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
-    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines"
-    selectionMode="single">
+    <p-table
+      [value]="dataFilter"
+      [tableStyle]="{ 'min-width': '50rem' }"
+      styleClass="p-datatable-gridlines"
+      selectionMode="single"
+    >
       <ng-template pTemplate="header">
         <tr>
           <th>NOMBRE</th>
           <th>EMPRESA</th>
           <th>RUC</th>
-          <th>RUBRO</th>
+          <th>TELEFONO</th>
+          <th class="text-center">CORREO</th>
+          <th>DIRECCION</th>
           <th class="text-center">ACCIONES</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-proveedor>
+      <ng-template pTemplate="body" let-client>
         <tr>
-          <td>{{ proveedor.nombre }}</td>
-          <td>{{ proveedor.empresa }}</td>
-          <td>{{ proveedor.ruc }}</td>
-          <td>{{ proveedor.rubro }}</td>
-          <td class="text-center" style="padding: 0.25rem !important;">
+          <td>{{ client.name }}</td>
+          <td>{{ client.company }}</td>
+          <td>{{ client.ruc || "-" }}</td>
+          <td>{{ client.phone || "-" }}</td>
+          <td class="text-center">{{ client.email || "-" }}</td>
+          <td>{{ client.address || "-" }}</td>
+          <td class="text-center" style="padding: 0.25rem !important">
             <div class="flex gap-2 justify-evenly text-sm">
               <p-button
                 icon="pi pi-pencil"
                 label="Editar"
-                (onClick)="showUpdateDialog(proveedor)"
+                (onClick)="showUpdateDialog(client)"
               />
               <p-button
-                icon="pi pi-arrow-circle-down"
-                label="Gastos"
+                icon="pi pi-shopping-bag"
+                label="Pedidos"
                 (onClick)="
-                  router.navigate(['/proveedores/' + proveedor.id + '/gastos'])
+                  router.navigate(['/clientes/' + client.id + '/pedidos'])
                 "
               />
             </div>
@@ -76,43 +84,42 @@
 </div>
 
 <p-dialog
-  [header]="updateId == '' ? 'Crear Proveedor' : 'Editar Proveedor'"
+  [header]="updateId == '' ? 'Crear Cliente' : 'Editar Cliente'"
   [(visible)]="dialog"
   [modal]="true"
   [style]="{ width: '28rem' }"
   (onHide)="hideDialog()"
 >
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label for="nombre">Nombre *</label>
-    <input
-      pInputText
-      id="nombre"
-      name="nombre"
-      [(ngModel)]="proveedor.nombre"
-    />
+    <label>Nombre *</label>
+    <input pInputText [(ngModel)]="client.name" />
   </div>
+
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label for="rubro">Rubro</label>
-    <p-autoComplete
-      [(ngModel)]="proveedor.rubro"
-      [suggestions]="rubrosFiltered"
-      [showEmptyMessage]="false"
-      (completeMethod)="filterRubro($event)"
-    />
+    <label>Empresa *</label>
+    <input pInputText [(ngModel)]="client.company" />
   </div>
+
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label for="nombre">RUC</label>
-    <input pInputText id="ruc" name="ruc" [(ngModel)]="proveedor.ruc" />
+    <label>RUC</label>
+    <input pInputText [(ngModel)]="client.ruc" />
   </div>
+
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label for="empresa">Empresa</label>
-    <input
-      pInputText
-      id="empresa"
-      name="empresa"
-      [(ngModel)]="proveedor.empresa"
-    />
+    <label>Telefono</label>
+    <input pInputText [(ngModel)]="client.phone" />
   </div>
+
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label>Correo</label>
+    <input pInputText [(ngModel)]="client.email" />
+  </div>
+
+  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
+    <label>Dirreccion</label>
+    <input pInputText [(ngModel)]="client.address" />
+  </div>
+
   <div class="flex gap-2 mt-4 justify-end">
     <p-button
       label="Cancelar"
@@ -123,7 +130,7 @@
     />
     <p-button
       label="Guardar"
-      (onClick)="addProveedor()"
+      (onClick)="updateId === '' ? addClient() : updateClient()"
       icon="pi pi-save text-lg"
       iconPos="left"
     />

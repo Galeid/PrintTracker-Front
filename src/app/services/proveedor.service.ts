@@ -2,40 +2,43 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ProveedorEntity } from '../entities/proveedor/proveedor.entity';
-import { ProveedorModel } from '../entities/proveedor/proveedor.model';
+import { SupplierEntity } from '../entities/proveedor/supplier.entity';
+import { SupplierModel } from '../entities/proveedor/supplier.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ProveedorService {
+export class SupplierService {
   url = 'http://localhost:3000';
-  headers = {
-    headers: { Accept: 'application/json' },
+  options = {
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`,
+    },
   };
 
   constructor(private http: HttpClient) {}
 
-  get(): Observable<ProveedorEntity[]> {
-    return this.http.get<ProveedorEntity[]>(
-      this.url + '/proveedores',
-      this.headers
+  get(): Observable<SupplierEntity[]> {
+    return this.http.get<SupplierEntity[]>(
+      this.url + '/suppliers',
+      this.options
     );
   }
 
-  add(model: ProveedorModel): Observable<ProveedorEntity> {
-    return this.http.post<ProveedorEntity>(
-      this.url + '/proveedores',
+  add(model: SupplierModel): Observable<SupplierEntity> {
+    return this.http.post<SupplierEntity>(
+      this.url + '/suppliers',
       model,
-      this.headers
+      this.options
     );
   }
 
-  update(model: ProveedorModel, id: string): Observable<ProveedorEntity> {
-    return this.http.patch<ProveedorEntity>(
+  update(model: SupplierModel, id: string): Observable<SupplierEntity> {
+    return this.http.patch<SupplierEntity>(
       this.url + '/proveedores/' + id,
       model,
-      this.headers
+      this.options
     );
   }
 }
