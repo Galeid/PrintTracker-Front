@@ -10,6 +10,7 @@ import { GastosComponent } from './view/gastos/gastos.component';
 import { MainLayoutComponent } from './layouts/main/main.component';
 import { RegistrosComponent } from './view/registros/registros.component';
 import { UserComponent } from './view/usuario/user.component';
+import { ServicesComponent } from './view/services/services.component';
 
 export const routes: Routes = [
   {
@@ -63,6 +64,11 @@ export const routes: Routes = [
       {
         path: 'usuarios',
         component: UserComponent,
+        canActivate: [redirectLogin],
+      },
+      {
+        path: 'servicios',
+        component: ServicesComponent,
         canActivate: [redirectLogin],
       }
     ],

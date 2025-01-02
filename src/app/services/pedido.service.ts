@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { PedidoEntity } from '../entities/pedido/pedido.entity';
+import { OrderEntity } from '../entities/pedido/pedido.entity';
 import { PedidoModel } from '../entities/pedido/pedido.model';
 
 @Injectable({
@@ -16,23 +16,23 @@ export class PedidoService {
 
   constructor(private http: HttpClient) {}
 
-  get(): Observable<PedidoEntity[]> {
-    return this.http.get<PedidoEntity[]>(this.url + '/pedidos',this.headers);
+  get(): Observable<OrderEntity[]> {
+    return this.http.get<OrderEntity[]>(this.url + '/pedidos',this.headers);
   }
 
-  getByCliente(id:string): Observable<PedidoEntity[]> {
-    return this.http.get<PedidoEntity[]>(this.url + '/pedidos/cliente/' + id,this.headers);
+  getByCliente(id:string): Observable<OrderEntity[]> {
+    return this.http.get<OrderEntity[]>(this.url + '/pedidos/cliente/' + id,this.headers);
   }
 
-  add(model: PedidoModel): Observable<PedidoEntity> {
-    return this.http.post<PedidoEntity>(this.url + '/pedidos', model, this.headers);
+  add(model: PedidoModel): Observable<OrderEntity> {
+    return this.http.post<OrderEntity>(this.url + '/pedidos', model, this.headers);
   }
 
-  pay(id: string): Observable<PedidoEntity> {
-    return this.http.patch<PedidoEntity>(this.url + '/pedidos/pagar/' + id, this.headers);
+  pay(id: string): Observable<OrderEntity> {
+    return this.http.patch<OrderEntity>(this.url + '/pedidos/pagar/' + id, this.headers);
   }
 
-  cancel(id: string): Observable<PedidoEntity> {
-    return this.http.delete<PedidoEntity>(this.url + '/pedidos/' + id, this.headers);
+  cancel(id: string): Observable<OrderEntity> {
+    return this.http.delete<OrderEntity>(this.url + '/pedidos/' + id, this.headers);
   }
 }

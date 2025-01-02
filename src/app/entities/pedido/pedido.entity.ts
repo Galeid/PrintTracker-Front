@@ -4,7 +4,7 @@ import {
   TipoPedido,
 } from '../enums/pedido.enums';
 
-export interface PedidoEntity {
+export interface OrderEntity {
   id: string;
   descripcion: string;
   monto: number;
@@ -17,3 +17,4 @@ export interface PedidoEntity {
   created_at: Date;
   updated_at: Date;
 }
+

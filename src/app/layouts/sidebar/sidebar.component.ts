@@ -26,6 +26,11 @@ export class SidebarLayoutComponent {
       route: '/proveedores',
     },
     {
+      title: 'Servicios',
+      icon: 'pi pi-shop',
+      route: '/servicios',
+    },
+    {
       title: 'Pedidos',
       icon: 'pi pi-shopping-bag',
       route: '/pedidos',

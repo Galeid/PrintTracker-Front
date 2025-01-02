@@ -20,7 +20,7 @@ import { TagModule } from 'primeng/tag';
 import { PedidoService } from '../../services/pedido.service';
 import { ClientService } from '../../services/cliente.service';
 import { ClientEntity } from '../../entities/cliente/cliente.entity';
-import { PedidoEntity } from '../../entities/pedido/pedido.entity';
+import { OrderEntity } from '../../entities/pedido/pedido.entity';
 import { PedidoModel } from '../../entities/pedido/pedido.model';
 import {
   EstadoPedido,
@@ -76,11 +76,11 @@ const pagoOptions = [
 })
 export class PedidosComponent implements OnInit {
   pedido: PedidoModel = { ...model };
-  pedidos: PedidoEntity[] = [];
+  pedidos: OrderEntity[] = [];
   dialog: boolean = false;
   payDialog: boolean = false;
-  dataFiltered: PedidoEntity[] = [];
-  tableFiltered: PedidoEntity[] = [];
+  dataFiltered: OrderEntity[] = [];
+  tableFiltered: OrderEntity[] = [];
   clienteSelected: ClientEntity | undefined;
   clientes: ClientEntity[] = [];
   clientesFiltered: ClientEntity[] = [];
@@ -249,7 +249,7 @@ export class PedidosComponent implements OnInit {
     return true;
   }
 
-  filterServicio(data: PedidoEntity[]) {
+  filterServicio(data: OrderEntity[]) {
     if (this.filterServicios && this.filterServicios.length > 0) {
       const valuesSet = new Set(
         this.filterServicios.map((item) => String(item.value))

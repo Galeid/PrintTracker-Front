@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ClientEntity } from '../entities/cliente/cliente.entity';
-import { ClientModel } from '../entities/cliente/cliente.model';
 import { UserEntity } from '../entities/user/user.entity';
 import { UserModel } from '../entities/user/user.model';
 
