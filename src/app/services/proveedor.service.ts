@@ -36,7 +36,7 @@ export class SupplierService {
 
   update(model: SupplierModel, id: string): Observable<SupplierEntity> {
     return this.http.patch<SupplierEntity>(
-      this.url + '/proveedores/' + id,
+      this.url + '/suppliers/' + id,
       model,
       this.options
     );

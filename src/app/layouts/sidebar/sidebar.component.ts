@@ -9,9 +9,12 @@ import { Router } from '@angular/router';
   styleUrl: './sidebar.component.css',
 })
 export class SidebarLayoutComponent {
-  constructor(public router: Router) {}
-
   items = [
+    {
+      title: 'Usuarios',
+      icon: 'pi pi-address-book',
+      route: '/usuarios',
+    },
     {
       title: 'Clientes',
       icon: 'pi pi-users',
@@ -38,4 +41,6 @@ export class SidebarLayoutComponent {
       route: '/registros',
     },
   ];
+
+  constructor(public router: Router) {}
 }

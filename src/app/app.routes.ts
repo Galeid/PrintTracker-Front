@@ -9,6 +9,7 @@ import { PedidosComponent } from './view/pedidos/pedidos.component';
 import { GastosComponent } from './view/gastos/gastos.component';
 import { MainLayoutComponent } from './layouts/main/main.component';
 import { RegistrosComponent } from './view/registros/registros.component';
+import { UserComponent } from './view/usuario/user.component';
 
 export const routes: Routes = [
   {
@@ -59,6 +60,11 @@ export const routes: Routes = [
         component: RegistrosComponent,
         canActivate: [redirectLogin],
       },
+      {
+        path: 'usuarios',
+        component: UserComponent,
+        canActivate: [redirectLogin],
+      }
     ],
   },
 ];

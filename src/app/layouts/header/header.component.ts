@@ -11,12 +11,12 @@ import { ButtonModule } from 'primeng/button';
   styleUrl: './header.component.css',
 })
 export class HeaderLayoutComponent implements OnInit {
-  branch: string = ''
+  branch: string = '';
 
   constructor(public router: Router) {}
 
   ngOnInit(): void {
-    this.branch = localStorage.getItem('branch') || ''
+    this.branch = localStorage.getItem('branch') || '';
   }
 
   logOut(): void {

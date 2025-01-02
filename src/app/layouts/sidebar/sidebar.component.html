@@ -1,11 +1,11 @@
 <div class="w-64 px-5 py-5 text-white flex flex-col gap-2">
   @for (item of items; track $index) {
-    <div
-      class="w-full hover:bg-cyan-600 flex gap-4 items-center rounded-lg px-3 py-1.5 cursor-pointer text-lg"
-      (click)="router.navigate([item.route])"
-    >
-      <span [class]="item.icon + ' text-xl'"></span>
-      <span>{{item.title}}</span>
-    </div>
+  <div
+    class="w-full hover:bg-cyan-600 flex gap-4 items-center rounded-lg px-3 py-1.5 cursor-pointer text-lg"
+    (click)="router.navigate([item.route])"
+  >
+    <span [class]="item.icon + ' text-xl'"></span>
+    <span>{{ item.title }}</span>
+  </div>
   }
 </div>

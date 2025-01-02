@@ -1,11 +1,11 @@
 export interface ClientEntity {
   id: string;
   name: string;
-  ruc: string;
+  ruc: string | null;
   company: string;
-  phone: string;
-  email: string;
-  addres: string;
+  phone: string | null;
+  email: string | null;
+  addres: string | null;
   status: boolean;
   created_at: Date;
   updated_at: Date;
