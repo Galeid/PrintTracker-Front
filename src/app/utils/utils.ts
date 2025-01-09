@@ -19,11 +19,20 @@ export class Utils {
 
   static capitalize(string: string) {
     let toCapitalize = string.toLowerCase();
-    return toCapitalize && toCapitalize[0].toUpperCase() + toCapitalize.slice(1);
+    return (
+      toCapitalize && toCapitalize[0].toUpperCase() + toCapitalize.slice(1)
+    );
   }
 
   static isToday(fecha: Date) {
     return new Date(fecha).getDate() === new Date().getDate();
+  }
+
+  static isUnlockedDate(date: Date) {
+    const item = localStorage.getItem('lockDate');
+    if (!item) return false;
+    const lockDate = new Date(+item);
+    return new Date(date).getTime() > lockDate.getTime();
   }
 
   static exportExcel(dataToExport: any[], name: string) {

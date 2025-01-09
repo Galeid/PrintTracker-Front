@@ -39,7 +39,7 @@ const emptyModel: ClientModel = {
   templateUrl: './client.component.html',
   styleUrl: './client.component.css',
 })
-export class ClientComponent implements OnInit {
+export class ClientsComponent implements OnInit {
   client: ClientModel = { ...emptyModel };
   clients: ClientEntity[] = [];
   dataFilter: ClientEntity[] = [];

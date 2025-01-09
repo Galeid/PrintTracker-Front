@@ -37,7 +37,7 @@
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
     <p-table
-      [value]="dataFilter"
+      [value]="filteredData"
       [tableStyle]="{ 'min-width': '50rem' }"
       styleClass="p-datatable-gridlines"
       selectionMode="single"
@@ -95,7 +95,7 @@
     <label>Rubro</label>
     <p-autoComplete
       [(ngModel)]="supplier.category"
-      [suggestions]="categoryFilter"
+      [suggestions]="filteredCategories"
       [showEmptyMessage]="false"
       (completeMethod)="filterCategory($event)"
     />

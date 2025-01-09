@@ -2,14 +2,14 @@ import { inject } from '@angular/core';
 import { Router, Routes } from '@angular/router';
 
 import { LoginComponent } from './view/login/login.component';
-import { ClientComponent } from './view/cliente/client.component';
+import { ClientsComponent } from './view/cliente/client.component';
 import { DashboardComponent } from './view/dashboard/dashboard.component';
-import { SupplierComponent } from './view/proveedor/supplier.component';
-import { PedidosComponent } from './view/pedidos/pedidos.component';
+import { SuppliersComponent } from './view/proveedor/supplier.component';
+import { OrdersComponent } from './view/pedidos/orders.component';
 import { GastosComponent } from './view/gastos/gastos.component';
 import { MainLayoutComponent } from './layouts/main/main.component';
 import { RegistrosComponent } from './view/registros/registros.component';
-import { UserComponent } from './view/usuario/user.component';
+import { UsersComponent } from './view/usuario/user.component';
 import { ServicesComponent } from './view/services/services.component';
 
 export const routes: Routes = [
@@ -23,17 +23,17 @@ export const routes: Routes = [
     children: [
       {
         path: 'clientes',
-        component: ClientComponent,
+        component: ClientsComponent,
         canActivate: [redirectLogin],
       },
       {
-        path: 'clientes/:clienteId/pedidos',
-        component: PedidosComponent,
+        path: 'clientes/:clientId/pedidos',
+        component: OrdersComponent,
         canActivate: [redirectLogin],
       },
       {
         path: 'proveedores',
-        component: SupplierComponent,
+        component: SuppliersComponent,
         canActivate: [redirectLogin],
       },
       {
@@ -43,7 +43,7 @@ export const routes: Routes = [
       },
       {
         path: 'pedidos',
-        component: PedidosComponent,
+        component: OrdersComponent,
         canActivate: [redirectLogin],
       },
       {
@@ -63,7 +63,7 @@ export const routes: Routes = [
       },
       {
         path: 'usuarios',
-        component: UserComponent,
+        component: UsersComponent,
         canActivate: [redirectLogin],
       },
       {

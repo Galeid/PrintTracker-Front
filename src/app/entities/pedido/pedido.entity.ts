@@ -1,19 +1,20 @@
 import { ClientEntity } from '../cliente/cliente.entity';
 import {
-  EstadoPago,
-  TipoPedido,
+  PaymentStatus,
 } from '../enums/pedido.enums';
+import { ServiceEntity } from '../service/service.entity';
 
 export interface OrderEntity {
   id: string;
-  descripcion: string;
-  monto: number;
-  nroPedido: number;
-  tipo: TipoPedido;
-  fecha: Date;
-  fechaPago: Date;
-  estadoPago: EstadoPago;
-  cliente: Partial<ClientEntity>;
+  description: string;
+  amount: number;
+  noOrder: number;
+  date: Date;
+  paymentDate: Date;
+  paymentStatus: PaymentStatus;
+  secondary: boolean;
+  service: Partial<ServiceEntity>;
+  client: Partial<ClientEntity>;
   created_at: Date;
   updated_at: Date;
 }

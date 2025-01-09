@@ -44,12 +44,12 @@ const emptyModel: SupplierModel = {
   templateUrl: './supplier.component.html',
   styleUrl: './supplier.component.css',
 })
-export class SupplierComponent implements OnInit {
+export class SuppliersComponent implements OnInit {
   supplier: SupplierModel = { ...emptyModel };
   suppliers: SupplierEntity[] = [];
-  dataFilter: SupplierEntity[] = [];
+  filteredData: SupplierEntity[] = [];
   categories: string[] = [];
-  categoryFilter: string[] = [];
+  filteredCategories: string[] = [];
   search: string = '';
   updateId: string = '';
   dialog: boolean = false;
@@ -69,7 +69,7 @@ export class SupplierComponent implements OnInit {
     this.supplierService.get().subscribe({
       next: (data) => {
         this.suppliers = data;
-        this.dataFilter = data;
+        this.filteredData = data;
         this.categories = data
           .map((item) => item.category)
           .filter((value, index, self) => self.indexOf(value) === index);
@@ -111,7 +111,7 @@ export class SupplierComponent implements OnInit {
   }
 
   filterData() {
-    this.dataFilter = this.suppliers.filter(
+    this.filteredData = this.suppliers.filter(
       (item) =>
         item.name.toLowerCase().includes(this.search.toLowerCase()) ||
         (item.company &&
@@ -129,7 +129,7 @@ export class SupplierComponent implements OnInit {
         filtered.push(category);
       }
     }
-    this.categoryFilter = filtered;
+    this.filteredCategories = filtered;
   }
 
   showUpdateDialog(supplier: SupplierEntity) {

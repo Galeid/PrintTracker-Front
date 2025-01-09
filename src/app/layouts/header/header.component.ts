@@ -23,6 +23,7 @@ export class HeaderLayoutComponent implements OnInit {
     localStorage.removeItem('token');
     localStorage.removeItem('branch');
     localStorage.removeItem('role');
+    localStorage.removeItem('lockDate');
 
     this.router.navigate(['/']);
   }

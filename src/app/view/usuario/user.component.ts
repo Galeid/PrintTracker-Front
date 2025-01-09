@@ -47,7 +47,7 @@ const emptyModel: UserModel = {
   templateUrl: './user.component.html',
   styleUrl: './user.component.css',
 })
-export class UserComponent {
+export class UsersComponent {
   user: UserModel = { ...emptyModel };
   users: UserEntity[] = [];
   dataFilter: UserEntity[] = [];
