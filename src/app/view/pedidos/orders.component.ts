@@ -25,6 +25,7 @@ import { OrderEntity } from '../../entities/pedido/pedido.entity';
 import { OrderModel } from '../../entities/pedido/pedido.model';
 import {
   EstadoPedido,
+  PaymentStatus,
   TipoPago,
   TipoPedido,
 } from '../../entities/enums/pedido.enums';
@@ -89,22 +90,11 @@ export class OrdersComponent implements OnInit {
 
   @Input() clientId: string | undefined;
 
-
-
-
-
-
-
-
-
-
-
   //@ViewChild('table') table!: ElementRef;
 
   filterStartDate: Date | undefined;
   filterEndDate: Date | undefined;
-
-  filterServicios: any[] | null = null;
+  filterServices: ServiceEntity[] | null = null;
 
   protected readonly Utils = Utils;
 
@@ -204,7 +194,7 @@ export class OrdersComponent implements OnInit {
     });
   }
 
-  filterClient(event: AutoCompleteCompleteEvent) {
+  filterClientAC(event: AutoCompleteCompleteEvent) {
     let filtered: ClientEntity[] = [];
     let query = event.query;
     for (let i = 0; i < this.clients.length; i++) {
@@ -216,7 +206,7 @@ export class OrdersComponent implements OnInit {
     this.filteredClients = filtered;
   }
 
-  filterService(event: AutoCompleteCompleteEvent) {
+  filterServiceAC(event: AutoCompleteCompleteEvent) {
     let filtered: ServiceEntity[] = [];
     let query = event.query;
     for (let i = 0; i < this.services.length; i++) {
@@ -270,21 +260,7 @@ export class OrdersComponent implements OnInit {
 
 
 
-  // exportExcel() {
-  //   const dataToExport = this.tableFiltered.map((item) => {
-  //     return {
-  //       NRO: '#' + item.nroPedido,
-  //       CLIENTE: item.cliente.name,
-  //       DESCRIPCION: item.descripcion,
-  //       SERVICIO: Utils.capitalize(item.tipo),
-  //       MONTO: item.monto,
-  //       'FECHA CREACION': Utils.formatDate(item.fecha),
-  //       'ESTADO PAGO': Utils.capitalize(item.estadoPago),
-  //       'FECHA PAGO': item.fechaPago ? Utils.formatDate(item.fechaPago) : '-',
-  //     };
-  //   });
-  //   Utils.exportExcel(dataToExport, 'Pedido_Reporte');
-  // }
+
 
   onFilter(e: TableFilterEvent) {
     this.tableFiltered = [...e.filteredValue];
@@ -314,22 +290,22 @@ export class OrdersComponent implements OnInit {
     return true;
   }
 
-  // filterServicio(data: OrderEntity[]) {
-  //   if (this.filterServicios && this.filterServicios.length > 0) {
-  //     const valuesSet = new Set(
-  //       this.filterServicios.map((item) => String(item.value))
-  //     );
-  //     this.filteredData = data.filter((item) => valuesSet.has(item.tipo));
-  //     this.tableFiltered = [...this.filteredData];
-  //   } else {
-  //     this.filteredData = [...data];
-  //     this.tableFiltered = [...data];
-  //   }
-  // }
+  filterService(data: OrderEntity[]) {
+    if (this.filterServices && this.filterServices.length > 0) {
+      const valuesSet = new Set(
+        this.filterServices.map((item) => String(item.name))
+      );
+      this.filteredData = data.filter((item) => valuesSet.has(item.service.name?item.service.name:''));
+      this.tableFiltered = [...this.filteredData];
+    } else {
+      this.filteredData = [...data];
+      this.tableFiltered = [...data];
+    }
+  }
 
   filterAll() {
     let isFilterDate = this.filterDate();
-    if (this.filterServicios == null) {
+    if (this.filterServices == null) {
       if (isFilterDate) {
         return;
       } else {
@@ -338,38 +314,52 @@ export class OrdersComponent implements OnInit {
         return;
       }
     }
-    //this.filterServicio(isFilterDate ? this.filteredData : this.orders);
+    this.filterService(isFilterDate ? this.filteredData : this.orders);
   }
 
   cleanFilters() {
     this.filterStartDate = undefined;
     this.filterEndDate = undefined;
-    this.filterServicios = null;
+    this.filterServices = null;
     this.filteredData = [...this.orders];
     this.tableFiltered = [...this.orders];
   }
 
-  getTagEstado(
-    estado: EstadoPedido
+  getStatusTag(
+    estado: PaymentStatus
   ):
     | 'success'
     | 'info'
     | 'warning'
     | 'danger'
     | 'secondary'
-    | 'contrast'
-    | undefined {
+    | 'contrast'{
     switch (estado) {
-      case EstadoPedido.COMPLETADO:
+      case PaymentStatus.PAID:
         return 'success';
-      case EstadoPedido.ANULADO:
+      case PaymentStatus.CANCELLED:
         return 'danger';
-      case EstadoPedido.PENDIENTE:
+      case PaymentStatus.PENDING:
         return 'warning';
-      case EstadoPedido.PROCESO:
+      case PaymentStatus.OTHER:
         return 'info';
-      default:
-        return undefined;
     }
   }
+
+
+  // exportExcel() {
+  //   const dataToExport = this.tableFiltered.map((item) => {
+  //     return {
+  //       NRO: '#' + item.nroPedido,
+  //       CLIENTE: item.cliente.name,
+  //       DESCRIPCION: item.descripcion,
+  //       SERVICIO: Utils.capitalize(item.tipo),
+  //       MONTO: item.monto,
+  //       'FECHA CREACION': Utils.formatDate(item.fecha),
+  //       'ESTADO PAGO': Utils.capitalize(item.estadoPago),
+  //       'FECHA PAGO': item.fechaPago ? Utils.formatDate(item.fechaPago) : '-',
+  //     };
+  //   });
+  //   Utils.exportExcel(dataToExport, 'Pedido_Reporte');
+  // }
 }
