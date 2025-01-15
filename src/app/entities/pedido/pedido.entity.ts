@@ -10,7 +10,7 @@ export interface OrderEntity {
   amount: number;
   noOrder: number;
   date: Date;
-  paymentDate: Date;
+  paymentDate: Date | null;
   paymentStatus: PaymentStatus;
   secondary: boolean;
   service: Partial<ServiceEntity>;

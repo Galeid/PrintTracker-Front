@@ -5,20 +5,20 @@
       icon="pi pi-angle-double-left text-xl"
       iconPos="left"
       severity="secondary"
-      (onClick)="proveedorId ? router.navigate(['/proveedores']) : router.navigate(['/dashboard'])"
+      (onClick)="supplierId ? router.navigate(['/proveedores']) : router.navigate(['/dashboard'])"
     />
     <div class="text-2xl font-semibold">
-      Gastos @if (proveedorId) { en {{getProveedorById(proveedorId)?.company}}}
+      Gastos @if (supplierId) { en {{getSupplierById(supplierId)?.company || getSupplierById(supplierId)?.name}}}
     </div>
   </div>
   <div class="flex gap-4 items-center">
-    <p-button
+    <!-- <p-button
       label="Exportar"
       icon="pi pi-cloud-download text-xl"
       iconPos="left"
       severity="warning"
       (onClick)="exportExcel()"
-    />
+    /> -->
     <p-button
       label="Crear"
       icon="pi pi-plus text-xl"
@@ -29,7 +29,7 @@
   </div>
 </div>
 
-<div class="flex mb-4 gap-4 items-center">
+<!-- <div class="flex mb-4 gap-4 items-center">
   <label class="font-bold">Filtrar por Fecha:</label>
   <p-calendar
     [(ngModel)]="filterStartDate"
@@ -52,11 +52,11 @@
     iconPos="left"
     (onClick)="cleanFilterDate()"
   />
-</div>
+</div> -->
 
 <div class="rounded-lg shadow-md bg-white p-4">
   <div class="rounded-t-lg overflow-hidden">
-    <p-table [value]="dataFiltered" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines"
+    <p-table [value]="filteredData" [tableStyle]="{ 'min-width': '50rem' }" styleClass="p-datatable-gridlines"
     selectionMode="single">
       <ng-template pTemplate="header">
         <tr>
@@ -65,26 +65,26 @@
           <th>RUBRO</th>
           <th class="text-center">MONTO</th>
           <th class="text-center">FECHA</th>
-          <th class="text-center">TIPO PAGO</th>
+          <th class="text-center">NRO FACTURA</th>
           <th class="text-center">ACCIONES</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-gasto>
         <tr>
-          <td>{{ gasto.proveedor?.nombre }}</td>
-          <td>{{ gasto.descripcion }}</td>
-          <td>{{ Utils.capitalize(gasto.proveedor?.rubro) }}</td>
-          <td class="text-center">{{ gasto.monto }}</td>
-          <td class="text-center">{{ Utils.formatDate(gasto.fecha) }}</td>
-          <td class="text-center">{{ Utils.capitalize(gasto.tipoPago) }}</td>
+          <td>{{ gasto.supplier?.name }}</td>
+          <td>{{ gasto.description }}</td>
+          <td>{{ Utils.capitalize(gasto.supplier?.category) }}</td>
+          <td class="text-center">{{ gasto.amount }}</td>
+          <td class="text-center">{{ Utils.formatDate(gasto.date) }}</td>
+          <td class="text-center">{{ gasto.noInvoice || '' }}</td>
           <td class="text-center" style="padding: 0.25rem !important;">
             <div class="flex gap-2 justify-evenly text-sm">
-              @if (Utils.isToday(gasto.fecha)) {
+              @if (Utils.isUnlockedDate(gasto.date)) {
               <p-button
                 icon="pi pi-times"
                 label="Anular"
                 severity="danger"
-                (click)="cancelGasto(gasto)"
+                (click)="cancelExpense(gasto)"
               />
               }
             </div>
@@ -105,30 +105,20 @@
 >
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Fecha *</label>
-    <p-calendar [(ngModel)]="gasto.fecha" dateFormat="dd/mm/yy" />
+    <p-calendar [(ngModel)]="expense.date" dateFormat="dd/mm/yy" />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Proveedor *</label>
     <p-autoComplete
-      [(ngModel)]="proveedorSelected"
-      [suggestions]="proveedoresFiltered"
-      (completeMethod)="filterProveedor($event)"
-      field="nombre"
+      [(ngModel)]="selectedSuplier"
+      [suggestions]="filteredSuppliers"
+      (completeMethod)="filterSupplierAC($event)"
+      field="name"
     />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Descripcion *</label>
-    <input pInputText name="descripcion" [(ngModel)]="gasto.descripcion" />
-  </div>
-  <div class="flex flex-column gap-2 mt-2 justify-between items-center">
-    <label>Tipo de Pago *</label>
-    <p-dropdown
-      [options]="pagoOptions"
-      [(ngModel)]="gasto.tipoPago"
-      optionLabel="label"
-      optionValue="value"
-      styleClass="w-[242px]"
-    />
+    <input pInputText name="descripcion" [(ngModel)]="expense.description" />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Monto *</label>
@@ -138,12 +128,16 @@
       mode="decimal"
       [maxFractionDigits]="2"
       locale="en-US"
-      [(ngModel)]="gasto.monto"
+      [(ngModel)]="expense.amount"
     />
+  </div>
+  <div class="flex flex-column gap-2 mt-2 py-3 justify-between items-center">
+    <label>Caja Secundario *</label>
+    <p-checkbox [(ngModel)]="expense.secondary" [binary]="true" />
   </div>
   <div class="flex flex-column gap-2 mt-2 justify-between items-center">
     <label>Nro Factura</label>
-    <input pInputText name="factura" [(ngModel)]="gasto.nroFactura" />
+    <input pInputText name="factura" [(ngModel)]="expense.noInvoice" />
   </div>
   <div class="flex gap-2 mt-4 justify-end">
     <p-button
@@ -155,7 +149,7 @@
     />
     <p-button
       label="Guardar"
-      (onClick)="addGasto()"
+      (onClick)="addExpense()"
       icon="pi pi-save text-lg"
       iconPos="left"
     />

@@ -15,23 +15,22 @@ import {
   AutoCompleteModule,
 } from 'primeng/autocomplete';
 
-import { GastoService } from '../../services/gasto.service';
+import { ExpenseService } from '../../services/gasto.service';
 import { SupplierService } from '../../services/proveedor.service';
 import { SupplierEntity } from '../../entities/proveedor/supplier.entity';
-import { GastoModel } from '../../entities/gasto/gasto.model';
+import { ExpenseModel } from '../../entities/gasto/gasto.model';
 import { TipoPago } from '../../entities/enums/pedido.enums';
-import { GastoEntity } from '../../entities/gasto/gasto.entity';
+import { ExpenseEntity } from '../../entities/gasto/gasto.entity';
 import { Utils } from '../../utils/utils';
+import { CheckboxModule } from 'primeng/checkbox';
 
-const model: GastoModel = {
-  descripcion: '',
-  monto: 0,
-  nroFactura: '',
-  tipoPago: TipoPago.EFECTIVO,
-  fecha: new Date(),
-  idUsuario: '',
-  idProveedor: '',
-  idCaja: '',
+const model: ExpenseModel = {
+  description: '',
+  amount: 0,
+  noInvoice: '',
+  date: new Date(),
+  secondary: false,
+  supplierId: ''
 };
 
 const pagoOptions = [
@@ -41,7 +40,7 @@ const pagoOptions = [
 ];
 
 @Component({
-  selector: 'app-gastos',
+  selector: 'app-expenses',
   standalone: true,
   imports: [
     TableModule,
@@ -54,20 +53,22 @@ const pagoOptions = [
     DropdownModule,
     CalendarModule,
     AutoCompleteModule,
+    CheckboxModule,
   ],
   templateUrl: './gastos.component.html',
   styleUrl: './gastos.component.css',
 })
 export class GastosComponent implements OnInit {
-  gasto: GastoModel = { ...model };
-  gastos: GastoEntity[] = [];
+  expense: ExpenseModel = { ...model };
+  expenses: ExpenseEntity[] = [];
   dialog: boolean = false;
-  dataFiltered: GastoEntity[] = [];
-  proveedorSelected: SupplierEntity | undefined;
-  proveedores: SupplierEntity[] = [];
-  proveedoresFiltered: SupplierEntity[] = [];
-  pagoOptions = pagoOptions;
-  @Input() proveedorId: string | undefined;
+  filteredData: ExpenseEntity[] = [];
+
+  selectedSuplier: SupplierEntity | undefined;
+  suppliers: SupplierEntity[] = [];
+  filteredSuppliers: SupplierEntity[] = [];
+
+  @Input() supplierId: string | undefined;
 
   filterStartDate: Date | undefined;
   filterEndDate: Date | undefined;
@@ -75,74 +76,82 @@ export class GastosComponent implements OnInit {
   protected readonly Utils = Utils;
 
   constructor(
-    private gastoService: GastoService,
-    private proveedorService: SupplierService,
+    private expenseService: ExpenseService,
+    private supplierService: SupplierService,
     public router: Router
   ) {}
 
   ngOnInit(): void {
-    this.getGastos();
-    this.getProveedores();
+    this.getExpenses();
+    this.getSuppliers();
   }
 
-  getProveedores() {
-    this.proveedorService.get().subscribe({
-      next: (data) => {
-        this.proveedores = [...data];
-        this.proveedoresFiltered = [...data];
-      },
-      error: (error) => console.error('Error:', error),
-    });
-  }
-
-  getGastos(): void {
-    if (this.proveedorId) {
-      this.gastoService.getByProveedor(this.proveedorId).subscribe({
+  getExpenses(): void {
+    if (this.supplierId) {
+      this.expenseService.getBySupplier(this.supplierId).subscribe({
         next: (data) => {
-          this.gastos = [...data];
-          this.dataFiltered = [...data];
+          this.expenses = [...data];
+          this.filteredData = [...data];
         },
         error: (error) => console.error('Error:', error),
       });
     } else {
-      this.gastoService.get().subscribe({
+      this.expenseService.get().subscribe({
         next: (data) => {
-          (this.gastos = [...data]), (this.dataFiltered = [...data]);
+          this.expenses = [...data]
+          this.filteredData = [...data];
         },
         error: (error) => console.error('Error:', error),
       });
     }
   }
 
-  addGasto() {
-    this.gasto.idProveedor = this.proveedorSelected?.id || '';
-    this.gasto.idUsuario = localStorage.getItem('idUsuario') || '';
-    this.gastoService.add(this.gasto).subscribe({
-      next: () => {
-        this.dialog = false;
-        this.getGastos();
+  getSuppliers() {
+    this.supplierService.get().subscribe({
+      next: (data) => {
+        this.suppliers = [...data];
+        this.filteredSuppliers = [...data];
       },
       error: (error) => console.error('Error:', error),
     });
   }
 
-  cancelGasto(pedido: any) {}
+  addExpense() {
+    let lockDate = localStorage.getItem('lockDate');
+    if (lockDate == null) return;
+    if (!this.selectedSuplier ) return;
+    if (new Date(this.expense.date).getTime() <= +lockDate) return;
 
-  filterProveedor(event: AutoCompleteCompleteEvent) {
+    if (this.expense.noInvoice === '') this.expense.noInvoice = undefined;
+
+    this.expense.supplierId = this.selectedSuplier.id;
+
+    this.expenseService.add(this.expense).subscribe({
+      next: () => {
+        this.showDialog(false)
+        this.getExpenses();
+      },
+      error: (error) => console.error('Error:', error),
+    });
+  }
+
+  cancelExpense(expense: ExpenseEntity) {}
+
+  filterSupplierAC(event: AutoCompleteCompleteEvent) {
     let filtered: SupplierEntity[] = [];
     let query = event.query;
 
-    for (let i = 0; i < this.proveedores.length; i++) {
-      let proveedor = this.proveedores[i];
-      if (proveedor.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-        filtered.push(proveedor);
+    for (let i = 0; i < this.suppliers.length; i++) {
+      let supplier = this.suppliers[i];
+      if (supplier.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+        filtered.push(supplier);
       }
     }
-    this.proveedoresFiltered = filtered;
+    this.filteredSuppliers = filtered;
   }
 
-  getProveedorById(id: string): SupplierEntity | undefined {
-    return this.proveedores.find((proveedor) => proveedor.id === id);
+  getSupplierById(id: string): SupplierEntity | undefined {
+    return this.suppliers.find((supplier) => supplier.id === id);
   }
 
   showDialog(visible: boolean) {
@@ -150,48 +159,61 @@ export class GastosComponent implements OnInit {
   }
 
   hideDialog() {
-    this.gasto = { ...model, fecha: new Date() };
-    this.proveedorSelected = undefined;
+    this.expense = { ...model, date: new Date() };
+    this.selectedSuplier = undefined;
   }
 
-  exportExcel() {
-    const dataToExport = this.dataFiltered.map((item) => {
-      return {
-        PROVEEDOR: item.proveedor.name,
-        DESCRIPCION: item.descripcion,
-        RUBRO: item.proveedor.category
-          ? Utils.capitalize(item.proveedor.category)
-          : '-',
-        MONTO: item.monto,
-        'FECHA CREACION': Utils.formatDate(item.fecha),
-        'TIPO PAGO': item.tipoPago ? Utils.capitalize(item.tipoPago) : '-',
-      };
-    });
-    Utils.exportExcel(dataToExport, 'Gasto_Reporte');
-  }
 
-  filterDate() {
-    if (!this.filterStartDate || !this.filterEndDate) return;
+
+
+
+
+
+
+
+
+
+  filterDate(): boolean {
+    if (!this.filterStartDate || !this.filterEndDate) return false;
     if (this.filterStartDate < this.filterEndDate) {
-      this.dataFiltered = this.gastos.filter(
+      this.filteredData = this.expenses.filter(
         (item) =>
           this.filterStartDate &&
           this.filterEndDate &&
-          new Date(item.fecha) >= this.filterStartDate &&
-          new Date(item.fecha) <= this.filterEndDate
+          new Date(item.date) >= this.filterStartDate &&
+          new Date(item.date) <= this.filterEndDate
       );
     } else if (Utils.sameDate(this.filterStartDate, this.filterEndDate)) {
-      this.dataFiltered = this.gastos.filter(
+      this.filteredData = this.expenses.filter(
         (item) =>
           this.filterStartDate &&
-          Utils.sameDate(new Date(item.fecha), this.filterStartDate)
+          Utils.sameDate(new Date(item.date), this.filterStartDate)
       );
+    }else {
+      return false;
     }
+    return true
   }
 
-  cleanFilterDate() {
+  cleanFilters() {
     this.filterStartDate = undefined;
     this.filterEndDate = undefined;
-    this.dataFiltered = [...this.gastos];
+    this.filteredData = [...this.expenses];
   }
+
+   // exportExcel() {
+  //   const dataToExport = this.dataFiltered.map((item) => {
+  //     return {
+  //       PROVEEDOR: item.proveedor.name,
+  //       DESCRIPCION: item.descripcion,
+  //       RUBRO: item.proveedor.category
+  //         ? Utils.capitalize(item.proveedor.category)
+  //         : '-',
+  //       MONTO: item.monto,
+  //       'FECHA CREACION': Utils.formatDate(item.fecha),
+  //       'TIPO PAGO': item.tipoPago ? Utils.capitalize(item.tipoPago) : '-',
+  //     };
+  //   });
+  //   Utils.exportExcel(dataToExport, 'Gasto_Reporte');
+  // }
 }

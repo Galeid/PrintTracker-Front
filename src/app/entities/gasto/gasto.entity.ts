@@ -1,16 +1,13 @@
 import { SupplierEntity } from '../proveedor/supplier.entity';
-import {
-  TipoPago,
-} from '../enums/pedido.enums';
 
-export interface GastoEntity {
+export interface ExpenseEntity {
   id: string;
-  descripcion: string;
-  monto: number;
-  nroFactura: string;
-  tipoPago: TipoPago;
-  fecha: Date;
-  proveedor: Partial<SupplierEntity>;
+  description: string;
+  amount: number;
+  noInvoice: string | null;
+  date: Date;
+  secondary: boolean;
+  supplier: Partial<SupplierEntity>;
   created_at: Date;
   updated_at: Date;
 }

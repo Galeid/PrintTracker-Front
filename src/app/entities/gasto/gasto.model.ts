@@ -1,12 +1,8 @@
-import { TipoPago } from "../enums/pedido.enums";
-
-export interface GastoModel {
-  descripcion: string;
-  monto: number;
-  nroFactura?: string;
-  tipoPago: TipoPago;
-  fecha: Date;
-  idUsuario: string;
-  idProveedor: string;
-  idCaja: string;
+export interface ExpenseModel {
+  description: string;
+  amount: number;
+  noInvoice?: string;
+  date: Date;
+  secondary: boolean;
+  supplierId: string;
 }

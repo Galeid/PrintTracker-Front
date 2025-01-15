@@ -157,8 +157,8 @@ export class OrdersComponent implements OnInit {
     if (!this.selectedClient || !this.selectedService) return;
     if (new Date(this.order.date).getTime() <= +lockDate) return;
 
-    this.order.clientId = this.selectedClient.id || '';
-    this.order.serviceId = this.selectedService.id || '';
+    this.order.clientId = this.selectedClient.id;
+    this.order.serviceId = this.selectedService.id;
     console.log(this.order);
 
     this.orderService.add(this.order).subscribe({
@@ -218,8 +218,8 @@ export class OrdersComponent implements OnInit {
     this.filteredServices = filtered;
   }
 
-  getClienteById(id: string): ClientEntity | undefined {
-    return this.clients.find((cliente) => cliente.id === id);
+  getClientById(id: string): ClientEntity | undefined {
+    return this.clients.find((client) => client.id === id);
   }
 
   showDialog(visible: boolean) {
